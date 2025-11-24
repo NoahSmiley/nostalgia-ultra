@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL")
+}
+
+model User {
+  id             String            @id @default(cuid())
+  username       String            @unique
+  email          String            @unique
+  password       String?
+  referralCodeId String?
+  referralCode   ReferralCode?     @relation(fields: [referralCodeId], references: [id])
+  microsoftId    String?           @unique
+  displayName    String?
+  xboxGamertag   String?
+  minecraftLink  MinecraftAccount?
+  subscriptions  Subscription[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model ReferralCode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  maxUses   Int      @default(1)
+  uses      Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  users     User[]
+}
+
+model MinecraftAccount {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @unique
+  mcUuid     String   @unique
+  mcUsername String
+  linkedAt   DateTime @default(now())
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  user             User      @relation(fields: [userId], references: [id])
+  userId           String
+  stripeCustomerId String    @unique
+  stripeSubId      String?   @unique
+  status           String
+  monthlyAmount    Int
+  currentPeriodEnd DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model ModpackVersion {
+  id          String   @id @default(cuid())
+  version     String   @unique
+  commitSha   String
+  releasedAt  DateTime @default(now())
+  changelogMd String
+}
