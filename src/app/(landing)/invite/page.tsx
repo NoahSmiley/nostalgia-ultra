@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   signin_error: "Something went wrong during sign in. Please try again.",
 };
 
-export default function InvitePage() {
+function InviteContent() {
   const searchParams = useSearchParams();
   const [inviteCode, setInviteCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
@@ -148,5 +148,24 @@ export default function InvitePage() {
         Ask the server admin for an invite.
       </p>
     </div>
+  );
+}
+
+export default function InvitePage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-semibold text-foreground mb-4">
+            Enter Your Invite Code
+          </h1>
+          <p className="text-muted-foreground">
+            Loading...
+          </p>
+        </div>
+      </div>
+    }>
+      <InviteContent />
+    </Suspense>
   );
 }
