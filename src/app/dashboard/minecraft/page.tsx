@@ -2,26 +2,32 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, Loader2, Gamepad2, Info } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { CheckCircle2, XCircle, Loader2, Gamepad2, Info, Link2, Unlink, ArrowRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function MinecraftLinkPage() {
-  const { data: session, update } = useSession();
+  const { data: session, status, update } = useSession();
   const [mcUsername, setMcUsername] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [mcAccount, setMcAccount] = useState<any>(null);
+  const [loadingAccount, setLoadingAccount] = useState(true);
 
   useEffect(() => {
-    // Fetch current Minecraft account if linked
+    if (status === "loading") return;
+
     if (session?.user?.minecraftLinked) {
       fetchMinecraftAccount();
+    } else {
+      setLoadingAccount(false);
     }
-  }, [session]);
+  }, [session, status]);
 
   const fetchMinecraftAccount = async () => {
     try {
@@ -32,6 +38,8 @@ export default function MinecraftLinkPage() {
       }
     } catch (err) {
       console.error("Failed to fetch Minecraft account:", err);
+    } finally {
+      setLoadingAccount(false);
     }
   };
 
@@ -57,7 +65,7 @@ export default function MinecraftLinkPage() {
         setSuccess(true);
         setMcAccount(data);
         setMcUsername("");
-        await update(); // Refresh session
+        await update();
       } else {
         setError(data.error || "Failed to link account");
       }
@@ -81,8 +89,7 @@ export default function MinecraftLinkPage() {
       if (res.ok) {
         setMcAccount(null);
         setSuccess(false);
-        await update(); // Refresh session
-        // Force a full page reload to ensure UI is in sync
+        await update();
         window.location.reload();
       }
     } catch (err) {
@@ -90,123 +97,210 @@ export default function MinecraftLinkPage() {
     }
   };
 
-  return (
-    <div className="container mx-auto py-8">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Gamepad2 className="h-5 w-5" />
-            Minecraft Account Linking
-          </CardTitle>
-          <CardDescription>
-            Link your Minecraft Java Edition account to access the server
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {session?.user?.minecraftLinked && mcAccount ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 rounded-lg border border-green-500/20 bg-green-500/10">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                <p className="text-green-200">
-                  Your Minecraft account is linked!
-                </p>
-              </div>
+  // Loading State - Skeleton
+  if (status === "loading" || loadingAccount) {
+    return (
+      <div className="w-full">
+        {/* Hero skeleton */}
+        <div className="mb-16">
+          <Skeleton className="h-4 w-24 mb-4" />
+          <Skeleton className="h-12 w-80 mb-6" />
+          <Skeleton className="h-6 w-96 max-w-full" />
+        </div>
 
-              <div className="p-4 bg-zinc-900 rounded-lg space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-zinc-400">Username:</span>
-                  <span className="font-mono text-white">{mcAccount.username}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-400">Whitelisted:</span>
-                  <span className={mcAccount.whitelisted ? "text-green-400" : "text-yellow-400"}>
-                    {mcAccount.whitelisted ? "Yes" : "No (Subscribe to get access)"}
-                  </span>
-                </div>
-              </div>
+        {/* Card skeleton */}
+        <div className="max-w-xl rounded-2xl border border-border bg-card p-8">
+          <div className="flex items-center justify-between mb-6">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-8 w-40" />
+          </div>
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-              <Button
-                onClick={unlinkAccount}
-                variant="outline"
-                className="w-full"
-              >
-                Unlink Account
-              </Button>
+  // Linked State
+  if (session?.user?.minecraftLinked && mcAccount) {
+    return (
+      <div className="w-full">
+        {/* Hero - OpenAI Style */}
+        <div className="mb-16">
+          <p className="text-sm font-medium text-green-500 mb-4 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4" />
+            Account Linked
+          </p>
+          <h1 className="text-h1 text-foreground mb-6">
+            You're connected
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Your Minecraft account is connected and ready to play!
+          </p>
+        </div>
+
+        {/* Account Info Card */}
+        <div className="max-w-xl rounded-2xl border border-border bg-card p-8 mb-10">
+          <div className="flex items-center justify-between mb-6">
+            <span className="text-muted-foreground">Minecraft Username</span>
+            <span className="text-2xl font-mono font-semibold text-foreground">{mcAccount.username}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Server Access</span>
+            {mcAccount.whitelisted ? (
+              <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Whitelisted</Badge>
+            ) : (
+              <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">Subscription Required</Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Subscription CTA if not whitelisted */}
+        {!mcAccount.whitelisted && (
+          <Link href="/dashboard/subscription" className="block max-w-xl mb-10">
+            <div className="rounded-xl border border-border hover:border-primary/50 hover:bg-muted/30 transition-all p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium text-foreground mb-1">Get Server Access</h3>
+                  <p className="text-muted-foreground">
+                    Subscribe to get whitelisted and start playing on the server.
+                  </p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
             </div>
-          ) : (
-            <>
-              {error && (
-                <div className="flex items-center gap-3 p-4 rounded-lg border border-red-500/20 bg-red-500/10">
-                  <XCircle className="h-4 w-4 text-red-500" />
-                  <p className="text-red-200">
-                    {error}
-                  </p>
-                </div>
-              )}
+          </Link>
+        )}
 
-              {success && !session?.user?.minecraftLinked && (
-                <div className="flex items-center gap-3 p-4 rounded-lg border border-green-500/20 bg-green-500/10">
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  <p className="text-green-200">
-                    Successfully linked your Minecraft account!
-                  </p>
-                </div>
-              )}
+        <Separator className="my-12" />
 
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 p-4 rounded-lg border border-blue-500/20 bg-blue-500/10">
-                  <Info className="h-4 w-4 text-blue-500 mt-0.5" />
-                  <p className="text-blue-200">
-                    Since you're signed in with Microsoft, we just need your Minecraft username to complete the link.
-                    Make sure you own Minecraft Java Edition on this Microsoft account.
-                  </p>
-                </div>
+        {/* Unlink Option */}
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Manage Account</h2>
+          <p className="text-muted-foreground mb-4">
+            Need to link a different Minecraft account? You can unlink your current account below.
+          </p>
+          <Button onClick={unlinkAccount} variant="outline">
+            <Unlink className="mr-2 h-4 w-4" />
+            Unlink Minecraft Account
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-                <div className="space-y-2">
-                  <Label htmlFor="mc-username">Minecraft Java Edition Username</Label>
-                  <Input
-                    id="mc-username"
-                    value={mcUsername}
-                    onChange={(e) => setMcUsername(e.target.value)}
-                    placeholder="Enter your Minecraft username"
-                    className="bg-zinc-800"
-                  />
-                  <p className="text-xs text-zinc-500">
-                    This is your in-game username, not your Microsoft email
-                  </p>
-                </div>
+  // Unlinked State
+  return (
+    <div className="w-full">
+      {/* Hero - OpenAI Style */}
+      <div className="mb-16">
+        <p className="text-sm font-medium text-primary mb-4">Account Setup</p>
+        <h1 className="text-h1 text-foreground mb-6">
+          Link Your Minecraft Account
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Connect your Minecraft Java Edition account to get whitelisted on the server.
+        </p>
+      </div>
 
-                <Button
-                  onClick={linkAccount}
-                  disabled={verifying || !mcUsername.trim()}
-                  className="w-full"
-                >
-                  {verifying ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Linking...
-                    </>
-                  ) : (
-                    <>
-                      <Gamepad2 className="mr-2 h-4 w-4" />
-                      Link Minecraft Account
-                    </>
-                  )}
-                </Button>
+      {/* Info Box */}
+      <div className="mb-10 p-5 rounded-xl bg-blue-500/10 border border-blue-500/20 flex gap-4">
+        <Info className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-blue-200 font-medium mb-1">How It Works</p>
+          <p className="text-blue-200/80">
+            Since you signed in with Microsoft, we just need your Minecraft username to link your account.
+            Make sure you own Minecraft Java Edition on this Microsoft account.
+          </p>
+        </div>
+      </div>
 
-                <div className="text-sm text-zinc-400 space-y-2">
-                  <p>After linking, you'll get:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>Automatic server whitelisting with an active subscription</li>
-                    <li>Access to exclusive member features</li>
-                    <li>Sync between your website and in-game profiles</li>
-                  </ul>
-                </div>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+      {/* Error */}
+      {error && (
+        <div className="mb-6 p-4 rounded-xl border border-red-500/20 bg-red-500/10 flex gap-3">
+          <XCircle className="h-5 w-5 text-red-400 shrink-0" />
+          <p className="text-red-200">{error}</p>
+        </div>
+      )}
+
+      {/* Success */}
+      {success && !session?.user?.minecraftLinked && (
+        <div className="mb-6 p-4 rounded-xl border border-green-500/20 bg-green-500/10 flex gap-3">
+          <CheckCircle2 className="h-5 w-5 text-green-400 shrink-0" />
+          <p className="text-green-200">Successfully linked your Minecraft account!</p>
+        </div>
+      )}
+
+      {/* Link Form */}
+      <div className="max-w-xl rounded-2xl border border-border bg-card p-8 mb-16">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted">
+            <Gamepad2 className="h-6 w-6 text-foreground" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">Enter Your Username</h2>
+            <p className="text-muted-foreground">Your in-game name, not your Microsoft email</p>
+          </div>
+        </div>
+
+        <div className="flex gap-3 mb-3">
+          <Input
+            value={mcUsername}
+            onChange={(e) => setMcUsername(e.target.value)}
+            placeholder="Enter your Minecraft username"
+            className="flex-1 h-12 text-lg"
+            onKeyDown={(e) => e.key === 'Enter' && linkAccount()}
+          />
+          <Button
+            onClick={linkAccount}
+            disabled={verifying || !mcUsername.trim()}
+            size="lg"
+            className="h-12"
+          >
+            {verifying ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Linking...
+              </>
+            ) : (
+              <>
+                <Link2 className="mr-2 h-4 w-4" />
+                Link Account
+              </>
+            )}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Example: Steve, Alex, YourCoolName123
+        </p>
+      </div>
+
+      {/* Benefits */}
+      <div>
+        <h2 className="text-2xl font-semibold text-foreground mb-8">Why Link Your Account?</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="rounded-xl border border-border p-5">
+            <h3 className="font-medium text-foreground mb-2">Automatic Whitelist</h3>
+            <p className="text-muted-foreground">
+              Once you subscribe, you're automatically added to the server whitelist.
+            </p>
+          </div>
+          <div className="rounded-xl border border-border p-5">
+            <h3 className="font-medium text-foreground mb-2">Sync Your Profile</h3>
+            <p className="text-muted-foreground">
+              Your website account and in-game profile stay connected.
+            </p>
+          </div>
+          <div className="rounded-xl border border-border p-5">
+            <h3 className="font-medium text-foreground mb-2">Member Perks</h3>
+            <p className="text-muted-foreground">
+              Access exclusive in-game features tied to your subscription tier.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

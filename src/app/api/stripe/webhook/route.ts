@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
+import { mcControl } from '@/lib/mc-control';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get('stripe-signature')!;
+  const headersList = await headers();
+  const signature = headersList.get('stripe-signature')!;
 
   let event: Stripe.Event;
 
@@ -34,6 +36,14 @@ export async function POST(req: Request) {
             session.subscription as string
           );
 
+          // Get subscription data with type safety
+          const subData = subscription as unknown as {
+            id: string;
+            status: string;
+            current_period_end: number;
+            items: { data: Array<{ price: { unit_amount: number | null } }> };
+          };
+
           // Create or update subscription in database
           await prisma.subscription.upsert({
             where: {
@@ -42,20 +52,20 @@ export async function POST(req: Request) {
             create: {
               userId: session.metadata?.userId!,
               stripeCustomerId: session.customer as string,
-              stripeSubId: subscription.id,
-              status: subscription.status,
-              monthlyAmount: subscription.items.data[0].price.unit_amount || 0,
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+              stripeSubId: subData.id,
+              status: subData.status,
+              monthlyAmount: subData.items.data[0].price.unit_amount || 0,
+              currentPeriodEnd: new Date(subData.current_period_end * 1000),
             },
             update: {
-              stripeSubId: subscription.id,
-              status: subscription.status,
-              monthlyAmount: subscription.items.data[0].price.unit_amount || 0,
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+              stripeSubId: subData.id,
+              status: subData.status,
+              monthlyAmount: subData.items.data[0].price.unit_amount || 0,
+              currentPeriodEnd: new Date(subData.current_period_end * 1000),
             },
           });
 
-          // TODO: Add user to Minecraft whitelist
+          // Add user to Minecraft whitelist
           await addToWhitelist(session.metadata?.userId!);
         }
         break;
@@ -63,21 +73,22 @@ export async function POST(req: Request) {
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
+        const subData = subscription as unknown as { id: string; status: string; current_period_end: number };
 
         await prisma.subscription.update({
           where: {
-            stripeSubId: subscription.id,
+            stripeSubId: subData.id,
           },
           data: {
-            status: subscription.status,
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            status: subData.status,
+            currentPeriodEnd: new Date(subData.current_period_end * 1000),
           },
         });
 
         // Handle status changes (e.g., remove from whitelist if canceled)
-        if (subscription.status === 'canceled' || subscription.status === 'past_due') {
+        if (subData.status === 'canceled' || subData.status === 'past_due') {
           const sub = await prisma.subscription.findUnique({
-            where: { stripeSubId: subscription.id },
+            where: { stripeSubId: subData.id },
             include: { user: true },
           });
 
@@ -90,15 +101,16 @@ export async function POST(req: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
+        const deletedSubData = subscription as unknown as { id: string };
 
         const sub = await prisma.subscription.findUnique({
-          where: { stripeSubId: subscription.id },
+          where: { stripeSubId: deletedSubData.id },
           include: { user: true },
         });
 
         if (sub) {
           await prisma.subscription.update({
-            where: { stripeSubId: subscription.id },
+            where: { stripeSubId: deletedSubData.id },
             data: { status: 'canceled' },
           });
 
@@ -127,8 +139,8 @@ async function addToWhitelist(userId: string) {
     });
 
     if (user?.minecraftLink?.mcUsername) {
-      // TODO: Call MC Control microservice to add to whitelist
-      console.log(`TODO: Add ${user.minecraftLink.mcUsername} to whitelist`);
+      const result = await mcControl.addToWhitelist(user.minecraftLink.mcUsername);
+      console.log(`Added ${user.minecraftLink.mcUsername} to whitelist:`, result.message);
     }
   } catch (error) {
     console.error('Failed to add user to whitelist:', error);
@@ -143,8 +155,8 @@ async function removeFromWhitelist(userId: string) {
     });
 
     if (user?.minecraftLink?.mcUsername) {
-      // TODO: Call MC Control microservice to remove from whitelist
-      console.log(`TODO: Remove ${user.minecraftLink.mcUsername} from whitelist`);
+      const result = await mcControl.removeFromWhitelist(user.minecraftLink.mcUsername);
+      console.log(`Removed ${user.minecraftLink.mcUsername} from whitelist:`, result.message);
     }
   } catch (error) {
     console.error('Failed to remove user from whitelist:', error);

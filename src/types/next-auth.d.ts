@@ -10,6 +10,7 @@ declare module "next-auth" {
       username?: string;
       minecraftLinked?: boolean;
       hasActiveSubscription?: boolean;
+      isAdmin?: boolean;
     };
   }
 

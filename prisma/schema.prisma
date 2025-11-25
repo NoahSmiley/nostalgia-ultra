@@ -16,25 +16,30 @@ model User {
   username       String            @unique
   email          String            @unique
   password       String?
-  referralCodeId String?
-  referralCode   ReferralCode?     @relation(fields: [referralCodeId], references: [id])
+  inviteCodeId   String?
+  inviteCode     InviteCode?       @relation("UsedInviteCode", fields: [inviteCodeId], references: [id])
   microsoftId    String?           @unique
   displayName    String?
   xboxGamertag   String?
+  isAdmin        Boolean           @default(false)
   minecraftLink  MinecraftAccount?
   subscriptions  Subscription[]
+  createdInvites InviteCode[]      @relation("CreatedInvites")
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 }
 
-model ReferralCode {
-  id        String   @id @default(cuid())
-  code      String   @unique
-  maxUses   Int      @default(1)
-  uses      Int      @default(0)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  users     User[]
+model InviteCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  maxUses     Int      @default(1)
+  uses        Int      @default(0)
+  active      Boolean  @default(true)
+  createdBy   User?    @relation("CreatedInvites", fields: [createdById], references: [id])
+  createdById String?
+  note        String?  // Optional note to remember who this code is for
+  createdAt   DateTime @default(now())
+  users       User[]   @relation("UsedInviteCode")
 }
 
 model MinecraftAccount {

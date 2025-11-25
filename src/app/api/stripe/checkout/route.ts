@@ -27,9 +27,10 @@ export async function POST(req: Request) {
 
     // Validate custom amount for Ultra tier
     if (tier === 'ultra' && customAmount) {
-      if (customAmount < selectedTier.minPrice) {
+      const ultraTier = SUBSCRIPTION_TIERS.ultra;
+      if (customAmount < ultraTier.minPrice) {
         return NextResponse.json(
-          { error: `Ultra tier requires minimum $${selectedTier.minPrice / 100}/month` },
+          { error: `Ultra tier requires minimum $${ultraTier.minPrice / 100}/month` },
           { status: 400 }
         );
       }
