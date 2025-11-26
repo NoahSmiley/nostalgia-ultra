@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Accessories",
+    "side": "both",
+    "modrinthId": "jtmvUHXj"
+  },
+  {
+    "name": "Amendments",
+    "side": "both",
+    "modrinthId": "6iTJugQR"
+  },
+  {
+    "name": "Analog",
+    "side": "server",
+    "modrinthId": "OpqpD8K2"
+  },
+  {
+    "name": "Architectury API",
+    "side": "both",
+    "modrinthId": "lhGA9TYQ"
+  },
+  {
+    "name": "AttributeFix",
+    "side": "both",
+    "modrinthId": "lOOpEntO"
+  },
+  {
+    "name": "Biome Replacer",
+    "side": "server",
+    "modrinthId": "DAXbR0Wj"
+  },
+  {
+    "name": "Bookshelf",
+    "side": "both",
+    "modrinthId": "uy4Cnpcm"
+  },
+  {
+    "name": "Chunky",
+    "side": "both",
+    "modrinthId": "fALzjamp"
+  },
+  {
+    "name": "Cloth Config API",
+    "side": "both",
+    "modrinthId": "9s6osm5g"
+  },
+  {
+    "name": "Continents",
+    "side": "both",
+    "modrinthId": "bQ5TJA1E"
+  },
+  {
+    "name": "Cosy Critters & Creepy Crawlies",
+    "side": "client",
+    "modrinthId": "61PI8Hzj"
+  },
+  {
+    "name": "Diagonal Fences",
+    "side": "both",
+    "modrinthId": "IKARgflD"
+  },
+  {
+    "name": "Distant Horizons",
+    "side": "both",
+    "modrinthId": "uCdwusMi"
+  },
+  {
+    "name": "Fabric API",
+    "side": "both",
+    "modrinthId": "P7dR8mSH"
+  },
+  {
+    "name": "Fabric Language Kotlin",
+    "side": "both",
+    "modrinthId": "Ha28R6CL"
+  },
+  {
+    "name": "FallingTree",
+    "side": "both",
+    "modrinthId": "Fb4jn8m6"
+  },
+  {
+    "name": "FerriteCore",
+    "side": "both",
+    "modrinthId": "uXXizFIs"
+  },
+  {
+    "name": "Forge Config API Port",
+    "side": "both",
+    "modrinthId": "ohNO6lps"
+  },
+  {
+    "name": "Fzzy Config",
+    "side": "both",
+    "modrinthId": "hYykXjDp"
+  },
+  {
+    "name": "Geckolib",
+    "side": "both",
+    "modrinthId": "8BmcQJ2H"
+  },
+  {
+    "name": "Toni's Immersive Lanterns",
+    "side": "both",
+    "modrinthId": "vskzdsyT"
+  },
+  {
+    "name": "Lithium",
+    "side": "both",
+    "modrinthId": "gvQqBUqZ"
+  },
+  {
+    "name": "Lithostitched",
+    "side": "both",
+    "modrinthId": "XaDC71GB"
+  },
+  {
+    "name": "Marium's Soulslike Weaponry",
+    "side": "both",
+    "modrinthId": "oX6SohLj"
+  },
+  {
+    "name": "ModernFix",
+    "side": "both",
+    "modrinthId": "nmDcB62a"
+  },
+  {
+    "name": "Moonlight Lib",
+    "side": "both",
+    "modrinthId": "twkfQtEc"
+  },
+  {
+    "name": "M.R.U",
+    "side": "both",
+    "modrinthId": "SNVQ2c0g"
+  },
+  {
+    "name": "Nature's Compass",
+    "side": "both",
+    "modrinthId": "fPetb5Kh"
+  },
+  {
+    "name": "OctoLib",
+    "side": "both",
+    "modrinthId": "RH2KUdKJ"
+  },
+  {
+    "name": "oωo (owo-lib)",
+    "side": "both",
+    "modrinthId": "ccKDOlHs"
+  },
+  {
+    "name": "Player Animation Library",
+    "side": "both",
+    "modrinthId": "ha1mEyJS"
+  },
+  {
+    "name": "Polymorph",
+    "side": "both",
+    "modrinthId": "tagwiZkJ"
+  },
+  {
+    "name": "Prickle",
+    "side": "both",
+    "modrinthId": "aaRl8GiW"
+  },
+  {
+    "name": "Puzzles Lib",
+    "side": "both",
+    "modrinthId": "QAGBst4M"
+  },
+  {
+    "name": "Ranged Weapon API",
+    "side": "both",
+    "modrinthId": "AqaIIO6D"
+  },
+  {
+    "name": "Simple Voice Chat",
+    "side": "both",
+    "modrinthId": "9eGKb6K1"
+  },
+  {
+    "name": "Sodium Dynamic Lights",
+    "side": "client",
+    "modrinthId": "PxQSWIcD"
+  },
+  {
+    "name": "Sound Physics Remastered",
+    "side": "both",
+    "modrinthId": "qyVF9oeo"
+  },
+  {
+    "name": "Tectonic",
+    "side": "both",
+    "modrinthId": "lWDHr9jE"
+  },
+  {
+    "name": "Terralith",
+    "side": "both",
+    "modrinthId": "8oi3bsk5"
+  },
+  {
+    "name": "TxniLib",
+    "side": "both",
+    "modrinthId": "vBbPDuOs"
+  },
+  {
+    "name": "YetAnotherConfigLib (YACL)",
+    "side": "both",
+    "modrinthId": "1eAoo2KR"
+  }
+]

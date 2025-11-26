@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import staticModsBase from '@/data/mods-base.json';
 
 interface ModInfo {
   name: string;
@@ -72,8 +73,9 @@ function fetchModsFromLocalFiles(): { name: string; side: string; modrinthId?: s
 
     return mods.filter((m): m is { name: string; side: string; modrinthId?: string } => m !== null);
   } catch (error) {
-    console.error('Failed to read local mod files:', error);
-    return [];
+    // Fall back to static JSON file (for production/Vercel deployment)
+    console.log('Using static mods list (local files not available)');
+    return staticModsBase;
   }
 }
 
