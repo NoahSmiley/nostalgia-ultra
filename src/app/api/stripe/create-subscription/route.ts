@@ -206,6 +206,35 @@ export async function POST(req: Request) {
       );
     }
 
+    // Create or update the subscription record in the database
+    // This ensures we have a record even if the webhook is delayed
+    const subAny = subscription as any;
+    const periodEnd = subAny.current_period_end || subAny.items?.data?.[0]?.current_period_end;
+    const periodEndDate = periodEnd ? new Date(periodEnd * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    const monthlyAmount = tier === 'ultra' ? amount * 100 : 1000; // Store in cents
+
+    await prisma.subscription.upsert({
+      where: { stripeCustomerId: customerId },
+      create: {
+        userId: session.user.id,
+        stripeCustomerId: customerId,
+        stripeSubId: subscription.id,
+        status: 'incomplete', // Will be updated to 'active' by webhook or confirm endpoint
+        tier,
+        monthlyAmount,
+        currentPeriodEnd: periodEndDate,
+      },
+      update: {
+        stripeSubId: subscription.id,
+        status: 'incomplete',
+        tier,
+        monthlyAmount,
+        currentPeriodEnd: periodEndDate,
+      },
+    });
+
+    console.log('Created/updated subscription record in DB for user:', session.user.id);
+
     return NextResponse.json({
       subscriptionId: subscription.id,
       clientSecret,

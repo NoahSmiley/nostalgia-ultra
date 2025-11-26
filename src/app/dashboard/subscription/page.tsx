@@ -63,7 +63,7 @@ function SubscriptionContent() {
     }
   }, []);
 
-  // Handle success param - show message, clear URL, and poll for subscription
+  // Handle success param - show message, clear URL, and confirm subscription
   useEffect(() => {
     if (successParam && !hasHandledSuccess.current) {
       hasHandledSuccess.current = true;
@@ -73,36 +73,69 @@ function SubscriptionContent() {
       // Clear the URL params
       router.replace('/dashboard/subscription', { scroll: false });
 
-      // Poll for subscription status (webhook may take a moment to process)
-      let attempts = 0;
-      const maxAttempts = 10;
-      const pollInterval = setInterval(async () => {
-        attempts++;
+      // Try to confirm the subscription directly (backup for webhook)
+      const confirmAndPoll = async () => {
         try {
-          const res = await fetch('/api/subscription');
-          if (res.ok) {
-            const data = await res.json();
-            console.log('Polling subscription, attempt', attempts, ':', data);
-            if (data.status === 'active') {
-              setSubscription(data);
-              clearInterval(pollInterval);
+          // First fetch to see if we have a subscription with stripeSubId
+          const subRes = await fetch('/api/subscription');
+          if (subRes.ok) {
+            const subData = await subRes.json();
+            if (subData.status === 'active') {
+              setSubscription(subData);
+              return; // Already active, no need to confirm
+            }
+
+            // If we have a stripeSubId but not active, try to confirm it
+            if (subData.stripeSubId) {
+              console.log('Attempting to confirm subscription:', subData.stripeSubId);
+              const confirmRes = await fetch('/api/stripe/confirm-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subscriptionId: subData.stripeSubId }),
+              });
+
+              if (confirmRes.ok) {
+                const confirmData = await confirmRes.json();
+                console.log('Confirm result:', confirmData);
+                if (confirmData.status === 'active') {
+                  await fetchSubscription();
+                  return;
+                }
+              }
             }
           }
         } catch (err) {
-          console.error('Failed to poll subscription:', err);
+          console.error('Failed to confirm subscription:', err);
         }
 
-        if (attempts >= maxAttempts) {
-          clearInterval(pollInterval);
-          // Final fetch attempt
-          fetchSubscription();
-        }
-      }, 1000); // Poll every 1 second instead of 1.5
+        // Poll for subscription status (webhook may take a moment to process)
+        let attempts = 0;
+        const maxAttempts = 10;
+        const pollInterval = setInterval(async () => {
+          attempts++;
+          try {
+            const res = await fetch('/api/subscription');
+            if (res.ok) {
+              const data = await res.json();
+              console.log('Polling subscription, attempt', attempts, ':', data);
+              if (data.status === 'active') {
+                setSubscription(data);
+                clearInterval(pollInterval);
+              }
+            }
+          } catch (err) {
+            console.error('Failed to poll subscription:', err);
+          }
 
-      // Also do an immediate fetch
-      fetchSubscription();
+          if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            // Final fetch attempt
+            fetchSubscription();
+          }
+        }, 1000); // Poll every 1 second
+      };
 
-      return () => clearInterval(pollInterval);
+      confirmAndPoll();
     }
   }, [successParam]);
 

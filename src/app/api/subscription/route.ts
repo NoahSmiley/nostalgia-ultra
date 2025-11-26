@@ -14,8 +14,8 @@ export async function GET() {
       );
     }
 
-    // Find active subscription (includes those scheduled to cancel at period end)
-    const subscription = await prisma.subscription.findFirst({
+    // Find subscription - first try active, then incomplete (for confirming after payment)
+    let subscription = await prisma.subscription.findFirst({
       where: {
         userId: session.user.id,
         status: 'active',
@@ -24,6 +24,28 @@ export async function GET() {
         createdAt: 'desc',
       },
     });
+
+    // If no active subscription, check for incomplete (payment in progress)
+    if (!subscription) {
+      subscription = await prisma.subscription.findFirst({
+        where: {
+          userId: session.user.id,
+          status: 'incomplete',
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      // Return incomplete subscription info so frontend can confirm it
+      if (subscription) {
+        return NextResponse.json({
+          status: 'incomplete',
+          stripeSubId: subscription.stripeSubId,
+          tier: subscription.tier,
+        });
+      }
+    }
 
     if (!subscription) {
       return NextResponse.json({ status: 'none' });
