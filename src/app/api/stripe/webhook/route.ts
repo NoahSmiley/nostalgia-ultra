@@ -74,11 +74,12 @@ export async function POST(req: Request) {
       case 'invoice.paid': {
         // Handle successful payment for subscriptions (including embedded flow)
         const invoice = event.data.object as Stripe.Invoice;
+        const invoiceSubscription = (invoice as unknown as { subscription?: string | null }).subscription;
 
         // Only process subscription invoices
-        if (invoice.subscription && invoice.billing_reason === 'subscription_create') {
+        if (invoiceSubscription && invoice.billing_reason === 'subscription_create') {
           const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
+            invoiceSubscription
           );
 
           const subData = subscription as unknown as {

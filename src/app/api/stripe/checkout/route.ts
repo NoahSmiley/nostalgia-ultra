@@ -28,7 +28,14 @@ export async function POST(req: Request) {
     // Get the price ID
     let priceId: string | undefined;
 
-    if (tier === 'ultra' && customAmount) {
+    if (tier === 'ultra') {
+      // Ultra tier requires customAmount
+      if (!customAmount) {
+        return NextResponse.json(
+          { error: 'Ultra tier requires a custom amount' },
+          { status: 400 }
+        );
+      }
       // Convert cents to dollars for lookup
       const amountInDollars = customAmount / 100;
       priceId = ULTRA_PRICE_IDS[amountInDollars];
@@ -39,8 +46,8 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
-    } else {
-      priceId = selectedTier.priceId;
+    } else if (tier === 'member') {
+      priceId = SUBSCRIPTION_TIERS.member.priceId;
     }
 
     if (!priceId) {

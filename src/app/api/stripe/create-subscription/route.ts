@@ -32,8 +32,8 @@ export async function POST(req: Request) {
       if (!priceId) {
         priceId = process.env.STRIPE_ULTRA_PRICE_ID;
       }
-    } else {
-      priceId = SUBSCRIPTION_TIERS[tier as keyof typeof SUBSCRIPTION_TIERS].priceId;
+    } else if (tier === 'member') {
+      priceId = SUBSCRIPTION_TIERS.member.priceId;
     }
 
     if (!priceId) {
