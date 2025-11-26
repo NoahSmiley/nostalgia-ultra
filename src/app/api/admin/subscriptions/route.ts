@@ -3,6 +3,15 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { stripe } from '@/lib/stripe';
 
+// Type for Stripe subscription data we need
+interface StripeSubData {
+  id: string;
+  status: string;
+  current_period_end: number;
+  cancel_at_period_end: boolean;
+  items: { data: Array<{ price: { unit_amount: number | null } }> };
+}
+
 // GET - List all subscriptions with debug info
 export async function GET() {
   try {
@@ -47,7 +56,8 @@ export async function POST(req: NextRequest) {
 
     if (action === 'sync_from_stripe' && stripeSubId) {
       // Fetch subscription from Stripe and sync to DB
-      const stripeSub = await stripe.subscriptions.retrieve(stripeSubId);
+      const stripeSubRaw = await stripe.subscriptions.retrieve(stripeSubId);
+      const stripeSub = stripeSubRaw as unknown as StripeSubData;
 
       const existingSub = await prisma.subscription.findUnique({
         where: { stripeSubId },
@@ -88,7 +98,6 @@ export async function POST(req: NextRequest) {
 
     if (action === 'create_from_stripe' && stripeCustomerId) {
       // Look up customer's subscriptions in Stripe and create in DB
-      const stripeCustomer = await stripe.customers.retrieve(stripeCustomerId);
       const stripeSubs = await stripe.subscriptions.list({
         customer: stripeCustomerId,
         limit: 1,
@@ -98,7 +107,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'No Stripe subscription found for customer' }, { status: 404 });
       }
 
-      const stripeSub = stripeSubs.data[0];
+      const stripeSub = stripeSubs.data[0] as unknown as StripeSubData;
 
       // Find user by Stripe customer ID or create subscription
       let existingSub = await prisma.subscription.findUnique({
