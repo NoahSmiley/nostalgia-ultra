@@ -67,6 +67,22 @@ export class McControlClient {
     const response = await fetch(`${this.baseUrl}/health`);
     return response.json();
   }
+
+  async getServerStatus(): Promise<ServerStatus> {
+    return this.request<ServerStatus>('/server/status');
+  }
+}
+
+export interface ServerStatus {
+  online: boolean;
+  players: {
+    online: number;
+    max: number;
+    list?: string[];
+  };
+  tps?: number;
+  uptime?: string;
+  worldSize?: string;
 }
 
 export const mcControl = new McControlClient();

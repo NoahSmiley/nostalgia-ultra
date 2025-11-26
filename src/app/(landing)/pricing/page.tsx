@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Check, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
+import { PRICING, LINKS } from "@/config";
 
 export default function PricingPage() {
   return (
@@ -19,7 +20,7 @@ export default function PricingPage() {
           Get full access to <Brand /> with a subscription plan that works for you.
         </p>
         <Link
-          href="https://discord.gg/nostalgraultra"
+          href={LINKS.discord}
           target="_blank"
           className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors"
         >
@@ -51,7 +52,7 @@ export default function PricingPage() {
           <div className="space-y-4 flex-1">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Monthly</span>
-              <span className="text-foreground font-medium">$10.00</span>
+              <span className="text-foreground font-medium">{PRICING.member.priceDisplay}</span>
             </div>
           </div>
 
@@ -78,9 +79,9 @@ export default function PricingPage() {
           <div className="space-y-4 flex-1">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Monthly (custom)</span>
-              <span className="text-foreground font-medium">$15+</span>
+              <span className="text-foreground font-medium">{PRICING.ultra.priceShort}</span>
             </div>
-            <p className="text-xs text-muted-foreground">Minimum $15/month</p>
+            <p className="text-xs text-muted-foreground">Minimum {PRICING.ultra.minPriceDisplay}/month</p>
           </div>
 
           <Button
@@ -105,10 +106,8 @@ export default function PricingPage() {
             <ul className="space-y-3">
               {[
                 "Full server access",
-                "Standard role in Discord",
                 "Access to all worlds & dimensions",
-                "Land claiming system",
-                "Economy & player shops",
+                "50+ curated mods included",
                 "Community events participation",
               ].map((feature, i) => (
                 <li key={i} className="flex items-center gap-3">
@@ -125,11 +124,10 @@ export default function PricingPage() {
             <ul className="space-y-3">
               {[
                 "Everything in Standard",
+                "Ultra modpack with shaders & enhancements",
                 "Ultra role & exclusive perks",
-                "Priority support",
                 "Vote on server decisions",
                 "Early access to new features",
-                "Custom cosmetic options",
               ].map((feature, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <Check className="h-4 w-4 text-primary shrink-0" />

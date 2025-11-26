@@ -13,7 +13,7 @@ export default function AboutPage() {
       <div className="mb-16">
         <p className="text-sm font-medium text-primary mb-4">About Us</p>
         <h1 className="text-h1 text-foreground mb-6">
-          Our Story
+          The Idea
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
           <Brand /> is a private, invite-only Minecraft server built for sustainability.

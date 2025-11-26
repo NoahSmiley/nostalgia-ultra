@@ -6,23 +6,47 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Copy, Check, ArrowRight, ExternalLink, Server, Users, Clock, Gamepad2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { SERVER_CONFIG } from "@/config";
+
+interface ServerStatus {
+  online: boolean;
+  players: {
+    online: number;
+    max: number;
+  };
+  config: {
+    ip: string;
+    mcVersion: string;
+  };
+}
+
+interface ModpackVersion {
+  name: string;
+  version: string;
+  date: string;
+  changes: string[];
+}
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const [copied, setCopied] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
   const [mcAccount, setMcAccount] = useState<any>(null);
+  const [serverStatus, setServerStatus] = useState<ServerStatus | null>(null);
+  const [recentUpdates, setRecentUpdates] = useState<ModpackVersion[]>([]);
   const [loading, setLoading] = useState(true);
-  const serverIP = "play.nostalgraultra.com";
+  const serverIP = serverStatus?.config?.ip ?? SERVER_CONFIG.ip;
 
   useEffect(() => {
     if (status === "loading") return;
 
     const fetchData = async () => {
       try {
-        const [subRes, mcRes] = await Promise.all([
+        const [subRes, mcRes, statusRes, updatesRes] = await Promise.all([
           fetch("/api/subscription"),
           session?.user?.minecraftLinked ? fetch("/api/minecraft/account") : Promise.resolve(null),
+          fetch("/api/server/status"),
+          fetch("/api/modpack/versions"),
         ]);
 
         if (subRes.ok) {
@@ -30,6 +54,13 @@ export default function DashboardPage() {
         }
         if (mcRes?.ok) {
           setMcAccount(await mcRes.json());
+        }
+        if (statusRes.ok) {
+          setServerStatus(await statusRes.json());
+        }
+        if (updatesRes.ok) {
+          const versions = await updatesRes.json();
+          setRecentUpdates(versions.slice(0, 3));
         }
       } catch (err) {
         console.error("Failed to fetch data:", err);
@@ -165,16 +196,18 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-500 font-medium">Online</span>
+              <span className={`h-2.5 w-2.5 rounded-full ${serverStatus?.online ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
+              <span className={`font-medium ${serverStatus?.online ? "text-green-500" : "text-red-500"}`}>
+                {serverStatus?.online ? "Online" : "Offline"}
+              </span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Users className="h-4 w-4" />
-              <span>12 players</span>
+              <span>{serverStatus?.players?.online ?? 0} players</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground hidden sm:flex">
               <Clock className="h-4 w-4" />
-              <span>Version 1.21.1</span>
+              <span>Version {serverStatus?.config?.mcVersion ?? SERVER_CONFIG.mcVersion}</span>
             </div>
           </div>
           <Button variant="outline" size="sm" asChild>
@@ -199,7 +232,7 @@ export default function DashboardPage() {
           </Link>
           <Link href="/dashboard/mods" className="rounded-xl border border-border p-4 hover:border-primary/50 hover:bg-muted/30 transition-all">
             <h3 className="font-medium text-foreground mb-1">Mod List</h3>
-            <p className="text-sm text-muted-foreground">50+ mods included</p>
+            <p className="text-sm text-muted-foreground">{SERVER_CONFIG.modCountDisplay} mods included</p>
           </Link>
           <Link href="/dashboard/rules" className="rounded-xl border border-border p-4 hover:border-primary/50 hover:bg-muted/30 transition-all">
             <h3 className="font-medium text-foreground mb-1">Server Rules</h3>
@@ -217,16 +250,20 @@ export default function DashboardPage() {
           </Link>
         </div>
         <div className="space-y-0 divide-y divide-border">
-          {[
-            { title: "Server updated to 1.21.1", date: "2 days ago" },
-            { title: "New spawn area completed", date: "1 week ago" },
-            { title: "Performance improvements deployed", date: "2 weeks ago" },
-          ].map((news, i) => (
-            <div key={i} className="flex items-center justify-between py-4">
-              <span className="text-foreground">{news.title}</span>
-              <span className="text-sm text-muted-foreground">{news.date}</span>
+          {recentUpdates.length > 0 ? (
+            recentUpdates.map((update, i) => (
+              <div key={i} className="flex items-center justify-between py-4">
+                <span className="text-foreground">{update.name}</span>
+                <span className="text-sm text-muted-foreground">
+                  {new Date(update.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="py-4 text-muted-foreground text-center">
+              No updates yet
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

@@ -22,8 +22,6 @@ export const SUBSCRIPTION_TIERS = {
     name: 'Ultra',
     price: 1500, // $15.00 minimum in cents
     minPrice: 1500,
-    priceId: process.env.STRIPE_ULTRA_PRICE_ID,
-    customAmount: true,
     features: [
       'Everything in Member tier',
       'Ultra role & exclusive perks',
@@ -31,7 +29,13 @@ export const SUBSCRIPTION_TIERS = {
       'Vote on server decisions',
       'Early access to updates',
       'Special recognition',
-      'Custom donation amount',
     ],
   },
+};
+
+// Ultra tier price IDs mapped by amount in dollars
+export const ULTRA_PRICE_IDS: Record<number, string | undefined> = {
+  12: process.env.STRIPE_ULTRA_12_PRICE_ID,
+  20: process.env.STRIPE_ULTRA_20_PRICE_ID,
+  25: process.env.STRIPE_ULTRA_25_PRICE_ID,
 };

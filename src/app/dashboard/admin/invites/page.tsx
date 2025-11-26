@@ -340,7 +340,7 @@ export default function AdminInvitesPage() {
                   </p>
                 )}
 
-                {invite.users.length > 0 && (
+                {invite.users && invite.users.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-border">
                     <p className="text-xs text-muted-foreground mb-2">
                       Used by:

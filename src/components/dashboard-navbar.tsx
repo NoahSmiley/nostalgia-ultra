@@ -8,14 +8,15 @@ import {
   Activity,
   Download,
   FileText,
-  Sparkles,
   ScrollText,
   LogOut,
-  Gamepad2,
+  Link2,
   CreditCard,
   Map,
   Menu,
   X,
+  UserPlus,
+  Ticket,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -31,14 +32,18 @@ import { useState } from "react";
 
 const navItems = [
   { title: "Home", href: "/dashboard", icon: Home },
-  { title: "Status", href: "/dashboard/status", icon: Activity },
-  { title: "Map", href: "/dashboard/map", icon: Map },
-  { title: "Minecraft", href: "/dashboard/minecraft", icon: Gamepad2 },
+  { title: "Link Account", href: "/dashboard/minecraft", icon: Link2 },
   { title: "Subscription", href: "/dashboard/subscription", icon: CreditCard },
-  { title: "Install", href: "/dashboard/install", icon: Download },
-  { title: "Updates", href: "/dashboard/updates", icon: FileText },
-  { title: "Features", href: "/dashboard/features", icon: Sparkles },
+  { title: "Setup Guide", href: "/dashboard/install", icon: Download },
+  { title: "Server Status", href: "/dashboard/status", icon: Activity },
+  { title: "Live Map", href: "/dashboard/map", icon: Map },
   { title: "Rules", href: "/dashboard/rules", icon: ScrollText },
+  { title: "Updates", href: "/dashboard/updates", icon: FileText },
+];
+
+const adminItems = [
+  { title: "Invites", href: "/dashboard/admin/invites", icon: UserPlus },
+  { title: "Vouchers", href: "/dashboard/admin/vouchers", icon: Ticket },
 ];
 
 export function DashboardNavbar() {
@@ -100,6 +105,8 @@ export function DashboardNavbar() {
 
   // Navigation items component
   const NavItems = ({ isMobile = false }) => {
+    const isAdmin = session?.user?.isAdmin;
+
     return (
       <>
         {navItems.map((item) => {
@@ -125,6 +132,35 @@ export function DashboardNavbar() {
             </Link>
           );
         })}
+        {isAdmin && (
+          <>
+            {isMobile && <Separator className="my-2" />}
+            {!isMobile && <div className="w-px h-6 bg-border mx-2" />}
+            {adminItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              const linkClasses = `font-medium flex items-center gap-2 ${isMobile ? "text-base" : "text-sm"} ${
+                isActive
+                  ? "text-amber-500"
+                  : isMobile
+                  ? "text-amber-500/70"
+                  : "text-amber-500/70 hover:bg-amber-500/5"
+              } px-3 py-2 rounded-md`;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => isMobile && setIsMenuOpen(false)}
+                  className={linkClasses}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.title}
+                </Link>
+              );
+            })}
+          </>
+        )}
       </>
     );
   };
@@ -192,7 +228,6 @@ export function DashboardNavbar() {
                 <NavItems isMobile={true} />
               </div>
             </div>
-            <Separator />
             {/* Mobile user profile section */}
             <div className="p-2">
               {/* User info */}

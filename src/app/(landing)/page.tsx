@@ -2,51 +2,44 @@
 
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronLeft, ChevronRight, Globe, Flame, Sparkles, Mountain } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Globe, Swords, Paintbrush, Clock } from "lucide-react";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 const highlights = [
   {
-    name: "Overworld",
-    label: "Main Hub",
-    description: "The main survival world. Build, explore, and thrive in our persistent world.",
+    name: "The Frontier",
+    label: "Survival",
+    description: "Our main survival world with custom terrain generation. Build, explore, and thrive.",
     gradient: "from-green-500/30 via-green-500/10 to-emerald-500/5",
     borderColor: "border-green-500/30",
     labelColor: "text-green-400",
     Icon: Globe,
     iconColor: "text-green-500/60",
+    status: "available",
   },
   {
-    name: "The Nether",
-    label: "Dimension",
-    description: "A hellish dimension filled with danger and rare resources.",
+    name: "The Canvas",
+    label: "Creative",
+    description: "A creative world for building without limits. Design and share your creations.",
+    gradient: "from-cyan-500/30 via-sky-500/15 to-cyan-500/5",
+    borderColor: "border-cyan-500/30",
+    labelColor: "text-cyan-400",
+    Icon: Paintbrush,
+    iconColor: "text-cyan-500/60",
+    status: "coming_soon",
+  },
+  {
+    name: "The Crucible",
+    label: "PvP",
+    description: "Test your skills in competitive PvP battles and events.",
     gradient: "from-red-500/30 via-orange-500/15 to-red-500/5",
     borderColor: "border-red-500/30",
     labelColor: "text-red-400",
-    Icon: Flame,
+    Icon: Swords,
     iconColor: "text-red-500/60",
-  },
-  {
-    name: "The End",
-    label: "Dimension",
-    description: "Home of the Ender Dragon and valuable End Cities.",
-    gradient: "from-purple-500/30 via-violet-500/15 to-purple-500/5",
-    borderColor: "border-purple-500/30",
-    labelColor: "text-purple-400",
-    Icon: Sparkles,
-    iconColor: "text-purple-500/60",
-  },
-  {
-    name: "Resource World",
-    label: "Resets Monthly",
-    description: "Gather resources here without damaging the main world.",
-    gradient: "from-amber-500/30 via-yellow-500/15 to-amber-500/5",
-    borderColor: "border-amber-500/30",
-    labelColor: "text-amber-400",
-    Icon: Mountain,
-    iconColor: "text-amber-500/60",
+    status: "coming_soon",
   },
 ];
 
@@ -194,8 +187,8 @@ export default function LandingPage() {
       <div className="mb-16">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-sans font-normal text-foreground mb-2">Explore Multiple Worlds</h2>
-            <p className="text-muted-foreground">Travel between unique dimensions through our portal system.</p>
+            <h2 className="text-3xl font-sans font-normal text-foreground mb-2">Game Worlds</h2>
+            <p className="text-muted-foreground">Multiple worlds for different playstyles, with more coming soon.</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -225,7 +218,7 @@ export default function LandingPage() {
           {highlights.map((item, i) => (
             <div
               key={i}
-              className={`flex-shrink-0 w-[calc(50%-12px)] min-w-[400px] snap-start relative rounded-2xl overflow-hidden group cursor-pointer bg-gradient-to-br ${item.gradient} border ${item.borderColor} hover:border-opacity-60 transition-colors`}
+              className={`flex-shrink-0 w-[calc(50%-12px)] min-w-[400px] snap-start relative rounded-2xl overflow-hidden group cursor-pointer bg-gradient-to-br ${item.gradient} border ${item.borderColor} hover:border-opacity-60 transition-colors ${item.status === "coming_soon" ? "opacity-75" : ""}`}
             >
               <div className="absolute top-6 right-6">
                 <item.Icon className={`h-12 w-12 ${item.iconColor} group-hover:opacity-80 transition-opacity`} />
@@ -236,7 +229,18 @@ export default function LandingPage() {
                   {item.label}
                 </span>
                 <h3 className="text-3xl font-sans text-foreground mb-3">{item.name}</h3>
-                <p className="text-muted-foreground">{item.description}</p>
+                <p className="text-muted-foreground mb-4">{item.description}</p>
+                {item.status === "available" ? (
+                  <span className="inline-flex items-center gap-2 text-sm text-green-400">
+                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    Available Now
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    Coming Soon
+                  </span>
+                )}
               </div>
             </div>
           ))}

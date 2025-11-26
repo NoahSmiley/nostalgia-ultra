@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { stripe, SUBSCRIPTION_TIERS } from '@/lib/stripe';
+import { stripe, SUBSCRIPTION_TIERS, ULTRA_PRICE_IDS } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 
 export async function POST(req: Request) {
@@ -25,15 +25,29 @@ export async function POST(req: Request) {
 
     const selectedTier = SUBSCRIPTION_TIERS[tier as keyof typeof SUBSCRIPTION_TIERS];
 
-    // Validate custom amount for Ultra tier
+    // Get the price ID
+    let priceId: string | undefined;
+
     if (tier === 'ultra' && customAmount) {
-      const ultraTier = SUBSCRIPTION_TIERS.ultra;
-      if (customAmount < ultraTier.minPrice) {
+      // Convert cents to dollars for lookup
+      const amountInDollars = customAmount / 100;
+      priceId = ULTRA_PRICE_IDS[amountInDollars];
+
+      if (!priceId) {
         return NextResponse.json(
-          { error: `Ultra tier requires minimum $${ultraTier.minPrice / 100}/month` },
+          { error: `Invalid Ultra tier amount: $${amountInDollars}` },
           { status: 400 }
         );
       }
+    } else {
+      priceId = selectedTier.priceId;
+    }
+
+    if (!priceId) {
+      return NextResponse.json(
+        { error: 'Price not configured' },
+        { status: 500 }
+      );
     }
 
     // Get or create Stripe customer
@@ -54,45 +68,21 @@ export async function POST(req: Request) {
       customerId = customer.id;
     }
 
-    // Prepare line items based on whether it's a custom amount or fixed price
-    let lineItems: any[] = [];
-
-    if (tier === 'ultra' && customAmount) {
-      // For Ultra tier with custom amount, create a one-time price
-      lineItems = [{
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Nostalgia Ultra - Ultra Tier',
-            description: 'Premium server access with all exclusive perks',
-          },
-          unit_amount: customAmount,
-          recurring: {
-            interval: 'month',
-          },
-        },
-        quantity: 1,
-      }];
-    } else {
-      // For fixed price tiers
-      lineItems = [{
-        price: selectedTier.priceId,
-        quantity: 1,
-      }];
-    }
-
     // Create checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
       payment_method_types: ['card'],
-      line_items: lineItems,
+      line_items: [{
+        price: priceId,
+        quantity: 1,
+      }],
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dashboard/subscription?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dashboard/subscription`,
       metadata: {
         userId: session.user.id,
         tier,
-        customAmount: customAmount?.toString() || '',
+        amount: customAmount?.toString() || '',
       },
     });
 

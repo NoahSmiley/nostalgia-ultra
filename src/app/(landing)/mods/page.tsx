@@ -1,137 +1,54 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ExternalLink, Package } from "lucide-react";
+import { Search, ExternalLink, Package, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
+import Image from "next/image";
 
-const mods = [
-  {
-    name: "Create",
-    description: "Build mechanical contraptions, automate your base, and create amazing machines with rotating components.",
-    category: "Tech",
-    url: "https://modrinth.com/mod/create",
-  },
-  {
-    name: "Create: Steam 'n' Rails",
-    description: "Addon for Create that adds trains, rails, and steam-powered vehicles.",
-    category: "Tech",
-    url: "https://modrinth.com/mod/create-steam-n-rails",
-  },
-  {
-    name: "Farmer's Delight",
-    description: "Enhanced cooking system with new crops, recipes, and kitchen equipment.",
-    category: "Food",
-    url: "https://modrinth.com/mod/farmers-delight",
-  },
-  {
-    name: "Regions Unexplored",
-    description: "Discover beautiful new biomes and terrain features as you explore the world.",
-    category: "World Gen",
-    url: "https://modrinth.com/mod/regions-unexplored",
-  },
-  {
-    name: "Supplementaries",
-    description: "Tons of decoration blocks and useful utility items for building and decoration.",
-    category: "Decoration",
-    url: "https://modrinth.com/mod/supplementaries",
-  },
-  {
-    name: "JourneyMap",
-    description: "Real-time mapping in-game or in a web browser as you explore the world.",
-    category: "Utility",
-    url: "https://modrinth.com/mod/journeymap",
-  },
-  {
-    name: "Just Enough Items (JEI)",
-    description: "View items and recipes in-game. Essential for learning mod recipes.",
-    category: "Utility",
-    url: "https://modrinth.com/mod/jei",
-  },
-  {
-    name: "Sophisticated Backpacks",
-    description: "Upgradeable backpacks with many features including auto-pickup and filtering.",
-    category: "Storage",
-    url: "https://modrinth.com/mod/sophisticated-backpacks",
-  },
-  {
-    name: "Sophisticated Storage",
-    description: "Upgradeable chests, barrels, and shulker boxes with advanced features.",
-    category: "Storage",
-    url: "https://modrinth.com/mod/sophisticated-storage",
-  },
-  {
-    name: "Macaw's Bridges",
-    description: "Beautiful decorative bridges in various wood types and styles.",
-    category: "Decoration",
-    url: "https://modrinth.com/mod/macaws-bridges",
-  },
-  {
-    name: "Macaw's Doors",
-    description: "Adds many new door variants including stable doors and barn doors.",
-    category: "Decoration",
-    url: "https://modrinth.com/mod/macaws-doors",
-  },
-  {
-    name: "Macaw's Windows",
-    description: "Decorative windows and shutters in many styles and wood types.",
-    category: "Decoration",
-    url: "https://modrinth.com/mod/macaws-windows",
-  },
-  {
-    name: "Applied Energistics 2",
-    description: "Store items digitally in an ME network with autocrafting capabilities.",
-    category: "Tech",
-    url: "https://modrinth.com/mod/ae2",
-  },
-  {
-    name: "Botania",
-    description: "Tech mod themed around natural magic and mystical flowers.",
-    category: "Magic",
-    url: "https://modrinth.com/mod/botania",
-  },
-  {
-    name: "Alex's Mobs",
-    description: "Adds many new animals and creatures from around the world.",
-    category: "Mobs",
-    url: "https://modrinth.com/mod/alexs-mobs",
-  },
-  {
-    name: "Iron's Spells 'n Spellbooks",
-    description: "RPG-style magic system with spellbooks, scrolls, and upgrades.",
-    category: "Magic",
-    url: "https://modrinth.com/mod/irons-spells-n-spellbooks",
-  },
-  {
-    name: "Quark",
-    description: "Small quality of life improvements that feel like vanilla additions.",
-    category: "Utility",
-    url: "https://modrinth.com/mod/quark",
-  },
-  {
-    name: "Waystones",
-    description: "Craftable teleportation stones for fast travel between locations.",
-    category: "Utility",
-    url: "https://modrinth.com/mod/waystones",
-  },
-  {
-    name: "Sodium",
-    description: "Modern rendering engine for significantly improved FPS.",
-    category: "Performance",
-    url: "https://modrinth.com/mod/sodium",
-  },
-  {
-    name: "Lithium",
-    description: "General-purpose server and client optimization mod.",
-    category: "Performance",
-    url: "https://modrinth.com/mod/lithium",
-  },
-];
+interface ModInfo {
+  name: string;
+  slug: string;
+  description: string;
+  icon?: string;
+  url: string;
+  side: string;
+  modrinthId: string;
+  categories: string[];
+}
 
-const categories = ["All", ...Array.from(new Set(mods.map(m => m.category))).sort()];
+// Map Modrinth categories to display categories
+function getDisplayCategory(categories: string[]): string {
+  const categoryMap: Record<string, string> = {
+    'technology': 'Tech',
+    'storage': 'Storage',
+    'decoration': 'Decoration',
+    'worldgen': 'World Gen',
+    'food': 'Food',
+    'magic': 'Magic',
+    'utility': 'Utility',
+    'library': 'Library',
+    'optimization': 'Performance',
+    'adventure': 'Adventure',
+    'mobs': 'Mobs',
+    'equipment': 'Equipment',
+    'social': 'Social',
+    'cursed': 'Misc',
+    'economy': 'Economy',
+    'minigame': 'Minigame',
+    'transportation': 'Transport',
+  };
+
+  for (const cat of categories) {
+    if (categoryMap[cat]) return categoryMap[cat];
+  }
+
+  // Default based on first category or 'Misc'
+  return categories[0] ? categories[0].charAt(0).toUpperCase() + categories[0].slice(1) : 'Misc';
+}
 
 const categoryColors: Record<string, string> = {
   "Tech": "bg-blue-500/10 text-blue-400 border-blue-500/20",
@@ -143,20 +60,65 @@ const categoryColors: Record<string, string> = {
   "Magic": "bg-purple-500/10 text-purple-400 border-purple-500/20",
   "Mobs": "bg-red-500/10 text-red-400 border-red-500/20",
   "Performance": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  "Library": "bg-slate-500/10 text-slate-400 border-slate-500/20",
+  "Adventure": "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  "Equipment": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+  "Social": "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  "Transport": "bg-teal-500/10 text-teal-400 border-teal-500/20",
 };
 
 export default function ModsPage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [mods, setMods] = useState<ModInfo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMods = async () => {
+      try {
+        const res = await fetch("/api/mods");
+        if (!res.ok) throw new Error("Failed to fetch mods");
+        const data = await res.json();
+        setMods(data.mods || []);
+        setError(null);
+      } catch (err) {
+        setError("Failed to load mod list");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMods();
+  }, []);
+
+  // Get unique categories from mods
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    mods.forEach(mod => {
+      cats.add(getDisplayCategory(mod.categories));
+    });
+    return ["All", ...Array.from(cats).sort()];
+  }, [mods]);
 
   const filteredMods = useMemo(() => {
     return mods.filter(mod => {
       const matchesSearch = mod.name.toLowerCase().includes(search.toLowerCase()) ||
         mod.description.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = selectedCategory === "All" || mod.category === selectedCategory;
+      const modCategory = getDisplayCategory(mod.categories);
+      const matchesCategory = selectedCategory === "All" || modCategory === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [search, selectedCategory]);
+  }, [search, selectedCategory, mods]);
+
+  if (loading) {
+    return (
+      <div className="w-full flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -167,9 +129,15 @@ export default function ModsPage() {
           Our Mods
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
-          Explore the {mods.length}+ mods included in the <Brand /> modpack. Carefully curated for the best experience.
+          Explore the {mods.length} mods included in the <Brand /> modpack. Carefully curated for the best experience.
         </p>
       </div>
+
+      {error && (
+        <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+          {error}. Showing cached data if available.
+        </div>
+      )}
 
       {/* Search and Filter */}
       <div className="mb-8 space-y-4">
@@ -209,35 +177,49 @@ export default function ModsPage() {
 
       {/* Mods Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
-        {filteredMods.map((mod) => (
-          <Link
-            key={mod.name}
-            href={mod.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group rounded-2xl border border-border bg-card p-5 hover:border-foreground/20 transition-colors"
-          >
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted shrink-0">
-                <Package className="h-5 w-5 text-muted-foreground" />
+        {filteredMods.map((mod) => {
+          const displayCategory = getDisplayCategory(mod.categories);
+          return (
+            <Link
+              key={mod.modrinthId || mod.name}
+              href={mod.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group rounded-2xl border border-border bg-card p-5 hover:border-foreground/20 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted shrink-0 overflow-hidden">
+                  {mod.icon ? (
+                    <Image
+                      src={mod.icon}
+                      alt={mod.name}
+                      width={40}
+                      height={40}
+                      className="rounded-xl"
+                      unoptimized
+                    />
+                  ) : (
+                    <Package className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColors[displayCategory] || "bg-muted text-muted-foreground border-border"}`}>
+                  {displayCategory}
+                </span>
               </div>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColors[mod.category] || "bg-muted text-muted-foreground"}`}>
-                {mod.category}
-              </span>
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors flex items-center gap-2">
-              {mod.name}
-              <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {mod.description}
-            </p>
-          </Link>
-        ))}
+              <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors flex items-center gap-2">
+                {mod.name}
+                <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {mod.description || "No description available."}
+              </p>
+            </Link>
+          );
+        })}
       </div>
 
       {/* Empty State */}
-      {filteredMods.length === 0 && (
+      {filteredMods.length === 0 && !loading && (
         <div className="text-center py-16">
           <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">No mods found</h3>

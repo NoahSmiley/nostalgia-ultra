@@ -24,28 +24,27 @@ import { useState, useEffect } from "react";
 // Main nav items (shown at root level)
 const mainNavItems = [
   { title: "Home", href: "/dashboard" },
-  { title: "Status", href: "/dashboard/status" },
-  { title: "Map", href: "/dashboard/map" },
+  { title: "Setup Guide", href: "/dashboard/install" },
+  { title: "Server Status", href: "/dashboard/status" },
+  { title: "Live Map", href: "/dashboard/map" },
 ];
 
 // Account sub-menu items
 const accountNavItems = [
-  { title: "Account", href: "/dashboard/minecraft" },
+  { title: "Link Account", href: "/dashboard/minecraft" },
   { title: "Subscription", href: "/dashboard/subscription" },
 ];
 
 // Server info items
 const serverNavItems = [
-  { title: "Install", href: "/dashboard/install" },
-  { title: "Mods", href: "/dashboard/mods" },
-  { title: "Features", href: "/dashboard/features" },
   { title: "Updates", href: "/dashboard/updates" },
   { title: "Rules", href: "/dashboard/rules" },
 ];
 
 // Admin items
 const adminNavItems = [
-  { title: "Invite Codes", href: "/dashboard/admin/invites" },
+  { title: "Invites", href: "/dashboard/admin/invites" },
+  { title: "Vouchers", href: "/dashboard/admin/vouchers" },
 ];
 
 // All items for mobile (admin items added conditionally)
