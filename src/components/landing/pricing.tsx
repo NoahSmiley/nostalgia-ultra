@@ -24,7 +24,7 @@ const plans = [
   },
   {
     name: "Ultra",
-    price: "$12",
+    price: "$15+",
     period: "/month",
     badge: "Best Value",
     description: "For dedicated players who want the full experience",

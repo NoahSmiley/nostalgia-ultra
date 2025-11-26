@@ -35,7 +35,7 @@ export const SUBSCRIPTION_TIERS = {
 
 // Ultra tier price IDs mapped by amount in dollars
 export const ULTRA_PRICE_IDS: Record<number, string | undefined> = {
-  12: process.env.STRIPE_ULTRA_12_PRICE_ID,
+  15: process.env.STRIPE_ULTRA_15_PRICE_ID,
   20: process.env.STRIPE_ULTRA_20_PRICE_ID,
   25: process.env.STRIPE_ULTRA_25_PRICE_ID,
 };

@@ -37,12 +37,12 @@ export const PRICING = {
       'Special recognition',
     ],
     // Available Ultra price options (in dollars)
-    priceOptions: [12, 20, 25],
+    priceOptions: [15, 20, 25],
   },
 } as const;
 
 // Threshold for determining if a subscription is Ultra tier (in cents)
-export const ULTRA_TIER_THRESHOLD = 1200;
+export const ULTRA_TIER_THRESHOLD = 1500;
 
 // Helper to format cents as dollars
 export function formatPrice(cents: number): string {
