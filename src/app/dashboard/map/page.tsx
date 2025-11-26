@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { Maximize2, Minimize2, ExternalLink, RefreshCw, AlertCircle, Map } from "lucide-react";
 
 const DYNMAP_URL = process.env.NEXT_PUBLIC_DYNMAP_URL || "";
+// Use proxied URL to avoid mixed content issues (HTTP dynmap on HTTPS site)
+const PROXIED_DYNMAP_URL = "/dynmap/";
 
 export default function MapPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -45,15 +47,15 @@ export default function MapPage() {
         <div>
           <h2 className="text-2xl font-semibold text-foreground mb-6">What is Dynmap?</h2>
           <p className="text-muted-foreground mb-6">
-            Dynmap is a real-time map viewer that shows you the Minecraft world from a bird's eye view.
-            When it's ready, you'll be able to:
+            Dynmap is a real-time map viewer that shows you the Minecraft world from a bird&apos;s eye view.
+            When it&apos;s ready, you&apos;ll be able to:
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="rounded-xl border border-border p-5">
               <p className="text-foreground">View the entire server world from above</p>
             </div>
             <div className="rounded-xl border border-border p-5">
-              <p className="text-foreground">See online players and where they're exploring</p>
+              <p className="text-foreground">See online players and where they&apos;re exploring</p>
             </div>
             <div className="rounded-xl border border-border p-5">
               <p className="text-foreground">Switch between surface and cave views</p>
@@ -81,7 +83,7 @@ export default function MapPage() {
         </div>
         <iframe
           key={key}
-          src={DYNMAP_URL}
+          src={PROXIED_DYNMAP_URL}
           className="w-full h-full border-0"
           title="Dynmap"
           allow="fullscreen"
@@ -138,7 +140,7 @@ export default function MapPage() {
       <div className="rounded-2xl overflow-hidden border border-border mb-16">
         <iframe
           key={key}
-          src={DYNMAP_URL}
+          src={PROXIED_DYNMAP_URL}
           className="w-full border-0"
           style={{ height: "600px" }}
           title="Dynmap"
