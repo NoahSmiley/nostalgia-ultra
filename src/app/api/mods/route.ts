@@ -13,6 +13,14 @@ interface ModInfo {
   categories: string[];
 }
 
+interface ModrinthProject {
+  id: string;
+  slug: string;
+  description: string;
+  icon_url?: string;
+  categories: string[];
+}
+
 // Cache mods for 1 hour to avoid hitting rate limits
 let cachedMods: ModInfo[] | null = null;
 let cacheTimestamp = 0;
@@ -100,11 +108,11 @@ async function enrichModsWithModrinth(mods: { name: string; side: string; modrin
       throw new Error('Modrinth API error');
     }
 
-    const projects = await response.json();
-    const projectMap = new Map(projects.map((p: { id: string }) => [p.id, p]));
+    const projects: ModrinthProject[] = await response.json();
+    const projectMap = new Map<string, ModrinthProject>(projects.map((p) => [p.id, p]));
 
     return mods.map(mod => {
-      const project = mod.modrinthId ? projectMap.get(mod.modrinthId) : null;
+      const project = mod.modrinthId ? projectMap.get(mod.modrinthId) : undefined;
       return {
         name: mod.name,
         slug: project?.slug || mod.name.toLowerCase().replace(/\s+/g, '-'),
