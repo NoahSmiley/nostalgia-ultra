@@ -29,17 +29,60 @@ export async function POST(req: Request) {
     console.log('Confirming subscription:', subscriptionId, 'for user:', session.user.id);
 
     // Fetch the subscription from Stripe to check its current status
-    const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+    let stripeSubscription;
+    try {
+      stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+    } catch (stripeError: any) {
+      console.error('Failed to retrieve subscription from Stripe:', stripeError.message);
+      // If we can't reach Stripe, try to activate based on DB record
+      const existingSub = await prisma.subscription.findFirst({
+        where: { userId: session.user.id, stripeSubId: subscriptionId },
+      });
+      if (existingSub && existingSub.status === 'incomplete') {
+        // Assume payment went through since user was redirected with success=true
+        await prisma.subscription.update({
+          where: { id: existingSub.id },
+          data: { status: 'active' },
+        });
+        await addToWhitelist(session.user.id);
+        return NextResponse.json({ status: 'active', message: 'Subscription activated (Stripe unreachable)' });
+      }
+      throw stripeError;
+    }
+
     const subAny = stripeSubscription as any;
 
     console.log('Stripe subscription status:', subAny.status);
 
-    // Only activate if the Stripe subscription is active
-    if (subAny.status !== 'active') {
-      return NextResponse.json({
-        status: subAny.status,
-        message: 'Subscription is not yet active in Stripe',
-      });
+    // Accept both 'active' and 'trialing' as valid statuses
+    // Also accept 'incomplete' if payment_intent is succeeded (payment went through but status not updated yet)
+    const isActive = subAny.status === 'active' || subAny.status === 'trialing';
+
+    if (!isActive) {
+      // Check if the latest invoice was paid - if so, we can activate
+      const latestInvoice = subAny.latest_invoice;
+      let invoicePaid = false;
+
+      if (typeof latestInvoice === 'string') {
+        try {
+          const invoice = await stripe.invoices.retrieve(latestInvoice);
+          invoicePaid = invoice.status === 'paid';
+          console.log('Invoice status:', invoice.status);
+        } catch (e) {
+          console.log('Could not retrieve invoice');
+        }
+      } else if (latestInvoice?.status === 'paid') {
+        invoicePaid = true;
+      }
+
+      if (!invoicePaid) {
+        return NextResponse.json({
+          status: subAny.status,
+          message: 'Subscription is not yet active in Stripe',
+        });
+      }
+
+      console.log('Invoice is paid, activating subscription despite status:', subAny.status);
     }
 
     // Find the subscription in our database
