@@ -9,18 +9,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    const dynmapUrl = process.env.NEXT_PUBLIC_DYNMAP_URL;
-    if (!dynmapUrl) {
-      return [];
-    }
-    return [
-      {
-        source: '/dynmap/:path*',
-        destination: `${dynmapUrl}/:path*`,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
