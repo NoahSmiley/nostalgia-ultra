@@ -71,13 +71,16 @@ export async function POST(req: Request) {
         break;
       }
 
-      case 'invoice.paid': {
+      case 'invoice.paid':
+      case 'invoice.payment_succeeded': {
         // Handle successful payment for subscriptions (including embedded flow)
         const invoice = event.data.object as Stripe.Invoice;
         const invoiceSubscription = (invoice as unknown as { subscription?: string | null }).subscription;
 
-        // Only process subscription invoices
-        if (invoiceSubscription && invoice.billing_reason === 'subscription_create') {
+        console.log(`Processing ${event.type} for invoice ${invoice.id}, billing_reason: ${invoice.billing_reason}`);
+
+        // Process subscription invoices (for creation or renewal)
+        if (invoiceSubscription && (invoice.billing_reason === 'subscription_create' || invoice.billing_reason === 'subscription_cycle')) {
           const subscription = await stripe.subscriptions.retrieve(
             invoiceSubscription
           );
