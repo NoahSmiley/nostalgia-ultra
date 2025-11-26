@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import staticModsBase from '@/data/mods-base.json';
+import staticModsUltra from '@/data/mods-ultra.json';
 
 interface ModInfo {
   name: string;
@@ -12,6 +11,7 @@ interface ModInfo {
   side: string;
   modrinthId: string;
   categories: string[];
+  ultraOnly?: boolean;
 }
 
 interface ModrinthProject {
@@ -23,63 +23,15 @@ interface ModrinthProject {
 }
 
 // Cache mods for 1 hour to avoid hitting rate limits
-let cachedMods: ModInfo[] | null = null;
+let cachedStandardMods: ModInfo[] | null = null;
+let cachedUltraMods: ModInfo[] | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
-// Parse TOML-like packwiz files (simple parser for pw.toml format)
-function parsePackwizToml(content: string): { name: string; side: string; modrinthId?: string } {
-  const lines = content.split('\n');
-  let name = '';
-  let side = 'both';
-  let modrinthId = '';
-  let inModrinthSection = false;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-
-    if (trimmed.startsWith('name = ')) {
-      name = trimmed.replace('name = ', '').replace(/"/g, '');
-    } else if (trimmed.startsWith('side = ')) {
-      side = trimmed.replace('side = ', '').replace(/"/g, '');
-    } else if (trimmed === '[update.modrinth]') {
-      inModrinthSection = true;
-    } else if (trimmed.startsWith('[') && inModrinthSection) {
-      inModrinthSection = false;
-    } else if (inModrinthSection && trimmed.startsWith('mod-id = ')) {
-      modrinthId = trimmed.replace('mod-id = ', '').replace(/"/g, '');
-    }
-  }
-
-  return { name, side, modrinthId };
-}
-
-function fetchModsFromLocalFiles(): { name: string; side: string; modrinthId?: string }[] {
-  // Path to the modpack folder (relative to the next-app directory)
-  const modpackPath = path.join(process.cwd(), '..', '..', 'modpack', 'mods');
-
-  try {
-    // Read all .pw.toml files from the mods directory
-    const files = fs.readdirSync(modpackPath).filter(f => f.endsWith('.pw.toml'));
-
-    const mods = files.map(file => {
-      try {
-        const content = fs.readFileSync(path.join(modpackPath, file), 'utf-8');
-        return parsePackwizToml(content);
-      } catch {
-        return null;
-      }
-    });
-
-    return mods.filter((m): m is { name: string; side: string; modrinthId?: string } => m !== null);
-  } catch (error) {
-    // Fall back to static JSON file (for production/Vercel deployment)
-    console.log('Using static mods list (local files not available)');
-    return staticModsBase;
-  }
-}
-
-async function enrichModsWithModrinth(mods: { name: string; side: string; modrinthId?: string }[]): Promise<ModInfo[]> {
+async function enrichModsWithModrinth(
+  mods: { name: string; side: string; modrinthId?: string }[],
+  ultraOnly: boolean = false
+): Promise<ModInfo[]> {
   const modrinthIds = mods.filter(m => m.modrinthId).map(m => m.modrinthId);
 
   if (modrinthIds.length === 0) {
@@ -91,6 +43,7 @@ async function enrichModsWithModrinth(mods: { name: string; side: string; modrin
       side: m.side,
       modrinthId: m.modrinthId || '',
       categories: [],
+      ultraOnly,
     }));
   }
 
@@ -124,6 +77,7 @@ async function enrichModsWithModrinth(mods: { name: string; side: string; modrin
         side: mod.side,
         modrinthId: mod.modrinthId || '',
         categories: project?.categories || [],
+        ultraOnly,
       };
     });
   } catch (error) {
@@ -137,57 +91,101 @@ async function enrichModsWithModrinth(mods: { name: string; side: string; modrin
       side: m.side,
       modrinthId: m.modrinthId || '',
       categories: [],
+      ultraOnly,
     }));
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const pack = searchParams.get('pack') || 'all'; // 'standard', 'ultra', or 'all'
+
     const now = Date.now();
+    const cacheValid = (now - cacheTimestamp) < CACHE_TTL;
 
     // Return cached mods if still valid
-    if (cachedMods && (now - cacheTimestamp) < CACHE_TTL) {
-      return NextResponse.json({
-        mods: cachedMods,
-        count: cachedMods.length,
-        cached: true,
-      });
+    if (cacheValid && cachedStandardMods && cachedUltraMods) {
+      if (pack === 'standard') {
+        return NextResponse.json({
+          mods: cachedStandardMods,
+          count: cachedStandardMods.length,
+          cached: true,
+        });
+      } else if (pack === 'ultra') {
+        return NextResponse.json({
+          mods: cachedUltraMods,
+          count: cachedUltraMods.length,
+          cached: true,
+        });
+      } else {
+        // Combine standard + ultra-only mods
+        const standardModIds = new Set(cachedStandardMods.map(m => m.modrinthId));
+        const ultraOnlyMods = cachedUltraMods.filter(m => !standardModIds.has(m.modrinthId));
+        const allMods = [...cachedStandardMods, ...ultraOnlyMods].sort((a, b) => a.name.localeCompare(b.name));
+        return NextResponse.json({
+          mods: allMods,
+          count: allMods.length,
+          standardCount: cachedStandardMods.length,
+          ultraOnlyCount: ultraOnlyMods.length,
+          cached: true,
+        });
+      }
     }
 
-    // Fetch mods from local packwiz files
-    const basicMods = fetchModsFromLocalFiles();
-
-    // Filter out library/API mods for cleaner display (optional)
-    const contentMods = basicMods.filter(m => {
-      const lowerName = m.name.toLowerCase();
-      // Keep mods that aren't just libraries
-      return !lowerName.includes(' api') ||
-             lowerName.includes('fabric api'); // Keep Fabric API as it's important
-    });
+    // Use static JSON files
+    const standardMods = staticModsBase;
+    const ultraMods = staticModsUltra;
 
     // Enrich with Modrinth data
-    const enrichedMods = await enrichModsWithModrinth(contentMods);
+    const enrichedStandard = await enrichModsWithModrinth(standardMods, false);
+
+    // Find ultra-only mods (mods in ultra but not in standard)
+    const standardModIds = new Set(standardMods.map(m => m.modrinthId));
+    const ultraOnlyBasic = ultraMods.filter(m => !standardModIds.has(m.modrinthId));
+    const enrichedUltraOnly = await enrichModsWithModrinth(ultraOnlyBasic, true);
 
     // Sort alphabetically
-    enrichedMods.sort((a, b) => a.name.localeCompare(b.name));
+    enrichedStandard.sort((a, b) => a.name.localeCompare(b.name));
+    enrichedUltraOnly.sort((a, b) => a.name.localeCompare(b.name));
 
     // Update cache
-    cachedMods = enrichedMods;
+    cachedStandardMods = enrichedStandard;
+    cachedUltraMods = enrichedUltraOnly;
     cacheTimestamp = now;
 
-    return NextResponse.json({
-      mods: enrichedMods,
-      count: enrichedMods.length,
-      cached: false,
-    });
+    if (pack === 'standard') {
+      return NextResponse.json({
+        mods: enrichedStandard,
+        count: enrichedStandard.length,
+        cached: false,
+      });
+    } else if (pack === 'ultra') {
+      return NextResponse.json({
+        mods: enrichedUltraOnly,
+        count: enrichedUltraOnly.length,
+        cached: false,
+      });
+    } else {
+      // Combine standard + ultra-only mods
+      const allMods = [...enrichedStandard, ...enrichedUltraOnly].sort((a, b) => a.name.localeCompare(b.name));
+      return NextResponse.json({
+        mods: allMods,
+        count: allMods.length,
+        standardCount: enrichedStandard.length,
+        ultraOnlyCount: enrichedUltraOnly.length,
+        cached: false,
+      });
+    }
   } catch (error) {
     console.error('Failed to fetch mods:', error);
 
     // If we have cached data, return it even if expired
-    if (cachedMods) {
+    if (cachedStandardMods && cachedUltraMods) {
+      const allMods = [...cachedStandardMods, ...cachedUltraMods].sort((a, b) => a.name.localeCompare(b.name));
       return NextResponse.json({
-        mods: cachedMods,
-        count: cachedMods.length,
+        mods: allMods,
+        count: allMods.length,
         cached: true,
         error: 'Using cached data due to fetch error',
       });

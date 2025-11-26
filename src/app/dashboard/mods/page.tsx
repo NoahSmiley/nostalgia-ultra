@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, ExternalLink, Package, Loader2, RefreshCw } from "lucide-react";
+import { Search, ExternalLink, Package, Loader2, RefreshCw, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,15 @@ interface ModInfo {
   side: string;
   modrinthId: string;
   categories: string[];
+  ultraOnly?: boolean;
+}
+
+interface ModsApiResponse {
+  mods: ModInfo[];
+  count: number;
+  standardCount?: number;
+  ultraOnlyCount?: number;
+  cached: boolean;
 }
 
 // Map Modrinth categories to display categories
@@ -69,7 +78,10 @@ const categoryColors: Record<string, string> = {
 export default function ModsPage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedPack, setSelectedPack] = useState<"all" | "standard" | "ultra">("all");
   const [mods, setMods] = useState<ModInfo[]>([]);
+  const [standardCount, setStandardCount] = useState(0);
+  const [ultraOnlyCount, setUltraOnlyCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,10 +89,12 @@ export default function ModsPage() {
   const fetchMods = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     try {
-      const res = await fetch("/api/mods");
+      const res = await fetch("/api/mods?pack=all");
       if (!res.ok) throw new Error("Failed to fetch mods");
-      const data = await res.json();
+      const data: ModsApiResponse = await res.json();
       setMods(data.mods || []);
+      setStandardCount(data.standardCount || 0);
+      setUltraOnlyCount(data.ultraOnlyCount || 0);
       setError(null);
     } catch (err) {
       setError("Failed to load mod list");
@@ -110,9 +124,12 @@ export default function ModsPage() {
         mod.description.toLowerCase().includes(search.toLowerCase());
       const modCategory = getDisplayCategory(mod.categories);
       const matchesCategory = selectedCategory === "All" || modCategory === selectedCategory;
-      return matchesSearch && matchesCategory;
+      const matchesPack = selectedPack === "all" ||
+        (selectedPack === "standard" && !mod.ultraOnly) ||
+        (selectedPack === "ultra" && mod.ultraOnly);
+      return matchesSearch && matchesCategory && matchesPack;
     });
-  }, [search, selectedCategory, mods]);
+  }, [search, selectedCategory, selectedPack, mods]);
 
   if (loading) {
     return (
@@ -144,6 +161,13 @@ export default function ModsPage() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
           Explore the {mods.length} mods included in the <Brand /> modpack.
+          {standardCount > 0 && ultraOnlyCount > 0 && (
+            <span className="block mt-2 text-base">
+              <span className="text-foreground font-medium">{standardCount}</span> standard mods
+              {" + "}
+              <span className="text-purple-400 font-medium">{ultraOnlyCount}</span> Ultra exclusive mods.
+            </span>
+          )}
         </p>
       </div>
 
@@ -164,6 +188,41 @@ export default function ModsPage() {
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 h-11"
           />
+        </div>
+
+        {/* Pack Filter Tabs */}
+        <div className="flex gap-2 border-b border-border pb-4">
+          <button
+            onClick={() => setSelectedPack("all")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedPack === "all"
+                ? "bg-foreground text-background"
+                : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            All Mods ({mods.length})
+          </button>
+          <button
+            onClick={() => setSelectedPack("standard")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedPack === "standard"
+                ? "bg-foreground text-background"
+                : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Standard ({standardCount})
+          </button>
+          <button
+            onClick={() => setSelectedPack("ultra")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+              selectedPack === "ultra"
+                ? "bg-purple-600 text-white"
+                : "bg-purple-500/10 text-purple-400 hover:bg-purple-500/20"
+            }`}
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Ultra Exclusive ({ultraOnlyCount})
+          </button>
         </div>
 
         {/* Category Pills */}
@@ -199,7 +258,11 @@ export default function ModsPage() {
               href={mod.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group rounded-2xl border border-border bg-card p-5 hover:border-foreground/20 transition-colors"
+              className={`group rounded-2xl border bg-card p-5 transition-colors ${
+                mod.ultraOnly
+                  ? "border-purple-500/30 hover:border-purple-500/50"
+                  : "border-border hover:border-foreground/20"
+              }`}
             >
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted shrink-0 overflow-hidden">
@@ -216,11 +279,23 @@ export default function ModsPage() {
                     <Package className="h-5 w-5 text-muted-foreground" />
                   )}
                 </div>
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColors[displayCategory] || "bg-muted text-muted-foreground border-border"}`}>
-                  {displayCategory}
-                </span>
+                <div className="flex items-center gap-2">
+                  {mod.ultraOnly && (
+                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" />
+                      Ultra
+                    </span>
+                  )}
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColors[displayCategory] || "bg-muted text-muted-foreground border-border"}`}>
+                    {displayCategory}
+                  </span>
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors flex items-center gap-2">
+              <h3 className={`text-lg font-semibold mb-2 transition-colors flex items-center gap-2 ${
+                mod.ultraOnly
+                  ? "text-foreground group-hover:text-purple-400"
+                  : "text-foreground group-hover:text-primary"
+              }`}>
                 {mod.name}
                 <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
               </h3>

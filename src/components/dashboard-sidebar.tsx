@@ -25,6 +25,7 @@ import { useState, useEffect } from "react";
 const mainNavItems = [
   { title: "Home", href: "/dashboard" },
   { title: "Setup Guide", href: "/dashboard/install" },
+  { title: "Mods", href: "/dashboard/mods" },
   { title: "Server Status", href: "/dashboard/status" },
   { title: "Live Map", href: "/dashboard/map" },
 ];
@@ -168,7 +169,7 @@ export function DashboardSidebar() {
         </nav>
 
         {/* User Section */}
-        <div className="p-4 border-t">
+        <div className="p-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 w-full text-left hover:bg-muted/50 rounded-lg p-2 -m-2 transition-colors">

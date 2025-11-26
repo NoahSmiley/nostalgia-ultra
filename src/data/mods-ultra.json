@@ -1,0 +1,372 @@
+[
+  {
+    "name": "Accessories",
+    "side": "both",
+    "modrinthId": "jtmvUHXj"
+  },
+  {
+    "name": "Amendments",
+    "side": "both",
+    "modrinthId": "6iTJugQR"
+  },
+  {
+    "name": "Analog",
+    "side": "server",
+    "modrinthId": "OpqpD8K2"
+  },
+  {
+    "name": "Architectury API",
+    "side": "both",
+    "modrinthId": "lhGA9TYQ"
+  },
+  {
+    "name": "AttributeFix",
+    "side": "both",
+    "modrinthId": "lOOpEntO"
+  },
+  {
+    "name": "BadOptimizations",
+    "side": "client",
+    "modrinthId": "g96Z4WVZ"
+  },
+  {
+    "name": "Biome Replacer",
+    "side": "server",
+    "modrinthId": "DAXbR0Wj"
+  },
+  {
+    "name": "Bookshelf",
+    "side": "both",
+    "modrinthId": "uy4Cnpcm"
+  },
+  {
+    "name": "Concurrent Chunk Management Engine (Fabric)",
+    "side": "both",
+    "modrinthId": "VSNURh3q"
+  },
+  {
+    "name": "Camera Overhaul",
+    "side": "client",
+    "modrinthId": "m0oRwcZx"
+  },
+  {
+    "name": "Capes",
+    "side": "client",
+    "modrinthId": "89Wsn8GD"
+  },
+  {
+    "name": "Chunky",
+    "side": "both",
+    "modrinthId": "fALzjamp"
+  },
+  {
+    "name": "CIT Resewn",
+    "side": "client",
+    "modrinthId": "otVJckYQ"
+  },
+  {
+    "name": "Cloth Config API",
+    "side": "both",
+    "modrinthId": "9s6osm5g"
+  },
+  {
+    "name": "Continents",
+    "side": "both",
+    "modrinthId": "bQ5TJA1E"
+  },
+  {
+    "name": "Continuity",
+    "side": "client",
+    "modrinthId": "1IjD5062"
+  },
+  {
+    "name": "Cosy Critters & Creepy Crawlies",
+    "side": "client",
+    "modrinthId": "61PI8Hzj"
+  },
+  {
+    "name": "Diagonal Fences",
+    "side": "both",
+    "modrinthId": "IKARgflD"
+  },
+  {
+    "name": "Distant Horizons",
+    "side": "both",
+    "modrinthId": "uCdwusMi"
+  },
+  {
+    "name": "Dynamic Surroundings",
+    "side": "client",
+    "modrinthId": "H7fshfpD"
+  },
+  {
+    "name": "Eating Animation",
+    "side": "client",
+    "modrinthId": "rUgZvGzi"
+  },
+  {
+    "name": "Effective",
+    "side": "client",
+    "modrinthId": "pcPXJeZi"
+  },
+  {
+    "name": "[EMF] Entity Model Features",
+    "side": "client",
+    "modrinthId": "4I1XuqiY"
+  },
+  {
+    "name": "Entity Culling",
+    "side": "client",
+    "modrinthId": "NNAgCjsB"
+  },
+  {
+    "name": "[ETF] Entity Texture Features",
+    "side": "client",
+    "modrinthId": "BVzZfTc1"
+  },
+  {
+    "name": "Explosive Enhancement",
+    "side": "client",
+    "modrinthId": "OSQ8mw2r"
+  },
+  {
+    "name": "Fabric API",
+    "side": "both",
+    "modrinthId": "P7dR8mSH"
+  },
+  {
+    "name": "Fabric Language Kotlin",
+    "side": "both",
+    "modrinthId": "Ha28R6CL"
+  },
+  {
+    "name": "FallingTree",
+    "side": "both",
+    "modrinthId": "Fb4jn8m6"
+  },
+  {
+    "name": "FerriteCore",
+    "side": "both",
+    "modrinthId": "uXXizFIs"
+  },
+  {
+    "name": "Fog",
+    "side": "both",
+    "modrinthId": "WuGVWUF2"
+  },
+  {
+    "name": "Forge Config API Port",
+    "side": "both",
+    "modrinthId": "ohNO6lps"
+  },
+  {
+    "name": "Fzzy Config",
+    "side": "both",
+    "modrinthId": "hYykXjDp"
+  },
+  {
+    "name": "Geckolib",
+    "side": "both",
+    "modrinthId": "8BmcQJ2H"
+  },
+  {
+    "name": "ImmediatelyFast",
+    "side": "client",
+    "modrinthId": "5ZwdcRci"
+  },
+  {
+    "name": "Toni's Immersive Lanterns",
+    "side": "both",
+    "modrinthId": "vskzdsyT"
+  },
+  {
+    "name": "Indium",
+    "side": "client",
+    "modrinthId": "Orvt0mRa"
+  },
+  {
+    "name": "Iris Shaders",
+    "side": "client",
+    "modrinthId": "YL57xq9U"
+  },
+  {
+    "name": "LambdaBetterGrass",
+    "side": "client",
+    "modrinthId": "2Uev7LdA"
+  },
+  {
+    "name": "Lithium",
+    "side": "both",
+    "modrinthId": "gvQqBUqZ"
+  },
+  {
+    "name": "Lithostitched",
+    "side": "both",
+    "modrinthId": "XaDC71GB"
+  },
+  {
+    "name": "Marium's Soulslike Weaponry",
+    "side": "both",
+    "modrinthId": "oX6SohLj"
+  },
+  {
+    "name": "ModernFix",
+    "side": "both",
+    "modrinthId": "nmDcB62a"
+  },
+  {
+    "name": "Mod Menu",
+    "side": "client",
+    "modrinthId": "mOgUt4GM"
+  },
+  {
+    "name": "Moonlight Lib",
+    "side": "both",
+    "modrinthId": "twkfQtEc"
+  },
+  {
+    "name": "More Culling",
+    "side": "client",
+    "modrinthId": "51shyZVL"
+  },
+  {
+    "name": "M.R.U",
+    "side": "both",
+    "modrinthId": "SNVQ2c0g"
+  },
+  {
+    "name": "Nature's Compass",
+    "side": "both",
+    "modrinthId": "fPetb5Kh"
+  },
+  {
+    "name": "Not Enough Animations",
+    "side": "client",
+    "modrinthId": "MPCX6s5C"
+  },
+  {
+    "name": "Nvidium",
+    "side": "client",
+    "modrinthId": "SfMw2IZN"
+  },
+  {
+    "name": "OctoLib",
+    "side": "both",
+    "modrinthId": "RH2KUdKJ"
+  },
+  {
+    "name": "oωo (owo-lib)",
+    "side": "both",
+    "modrinthId": "ccKDOlHs"
+  },
+  {
+    "name": "Particle Rain",
+    "side": "client",
+    "modrinthId": "nrikgvxm"
+  },
+  {
+    "name": "Particular ✨",
+    "side": "client",
+    "modrinthId": "B1CcCd9h"
+  },
+  {
+    "name": "Text Placeholder API",
+    "side": "both",
+    "modrinthId": "eXts2L7r"
+  },
+  {
+    "name": "Player Animation Library",
+    "side": "both",
+    "modrinthId": "ha1mEyJS"
+  },
+  {
+    "name": "Polymorph",
+    "side": "both",
+    "modrinthId": "tagwiZkJ"
+  },
+  {
+    "name": "Prickle",
+    "side": "both",
+    "modrinthId": "aaRl8GiW"
+  },
+  {
+    "name": "Puzzles Lib",
+    "side": "both",
+    "modrinthId": "QAGBst4M"
+  },
+  {
+    "name": "Ranged Weapon API",
+    "side": "both",
+    "modrinthId": "AqaIIO6D"
+  },
+  {
+    "name": "re:squake",
+    "side": "client",
+    "modrinthId": "a9PBgIsO"
+  },
+  {
+    "name": "Shoulder Surfing Reloaded",
+    "side": "client",
+    "modrinthId": "kepjj2sy"
+  },
+  {
+    "name": "Simple Voice Chat",
+    "side": "both",
+    "modrinthId": "9eGKb6K1"
+  },
+  {
+    "name": "Sodium Dynamic Lights",
+    "side": "client",
+    "modrinthId": "PxQSWIcD"
+  },
+  {
+    "name": "Sodium",
+    "side": "client",
+    "modrinthId": "AANobbMI"
+  },
+  {
+    "name": "Sound Physics Remastered",
+    "side": "both",
+    "modrinthId": "qyVF9oeo"
+  },
+  {
+    "name": "Subtle Effects",
+    "side": "both",
+    "modrinthId": "4q8UOK1d"
+  },
+  {
+    "name": "Tectonic",
+    "side": "both",
+    "modrinthId": "lWDHr9jE"
+  },
+  {
+    "name": "Terralith",
+    "side": "both",
+    "modrinthId": "8oi3bsk5"
+  },
+  {
+    "name": "TxniLib",
+    "side": "both",
+    "modrinthId": "vBbPDuOs"
+  },
+  {
+    "name": "Visuality",
+    "side": "client",
+    "modrinthId": "rI0hvYcd"
+  },
+  {
+    "name": "Wakes",
+    "side": "client",
+    "modrinthId": "dlNu0RQY"
+  },
+  {
+    "name": "Wavey Capes",
+    "side": "client",
+    "modrinthId": "kYuIpRLv"
+  },
+  {
+    "name": "YetAnotherConfigLib (YACL)",
+    "side": "both",
+    "modrinthId": "1eAoo2KR"
+  }
+]
