@@ -40,11 +40,6 @@
     "modrinthId": "uy4Cnpcm"
   },
   {
-    "name": "Concurrent Chunk Management Engine (Fabric)",
-    "side": "both",
-    "modrinthId": "VSNURh3q"
-  },
-  {
     "name": "Camera Overhaul",
     "side": "client",
     "modrinthId": "m0oRwcZx"
@@ -338,11 +333,6 @@
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
-  },
-  {
-    "name": "Terralith",
-    "side": "both",
-    "modrinthId": "8oi3bsk5"
   },
   {
     "name": "TxniLib",
