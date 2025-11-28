@@ -336,17 +336,31 @@ export async function POST(req: Request) {
   }
 }
 
-// Helper functions for whitelist management
+// Helper functions for whitelist and role management
 async function addToWhitelist(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { minecraftLink: true },
+      include: {
+        minecraftLink: true,
+        subscription: true,
+      },
     });
 
     if (user?.minecraftLink?.mcUsername) {
+      // Add to whitelist
       const result = await mcControl.addToWhitelist(user.minecraftLink.mcUsername);
       console.log(`Added ${user.minecraftLink.mcUsername} to whitelist:`, result.message);
+
+      // Determine tier and assign LuckPerms group
+      const tier = user.subscription?.tier || 'member';
+      try {
+        const groupResult = await mcControl.setPlayerGroup(user.minecraftLink.mcUsername, tier);
+        console.log(`Set ${user.minecraftLink.mcUsername} to group '${tier}':`, groupResult.response);
+      } catch (groupError) {
+        console.error(`Failed to set LuckPerms group for ${user.minecraftLink.mcUsername}:`, groupError);
+        // Don't throw - whitelist succeeded, group is secondary
+      }
     }
   } catch (error) {
     console.error('Failed to add user to whitelist:', error);
@@ -361,10 +375,36 @@ async function removeFromWhitelist(userId: string) {
     });
 
     if (user?.minecraftLink?.mcUsername) {
+      // Remove from whitelist
       const result = await mcControl.removeFromWhitelist(user.minecraftLink.mcUsername);
       console.log(`Removed ${user.minecraftLink.mcUsername} from whitelist:`, result.message);
+
+      // Clear subscription groups from LuckPerms
+      try {
+        await mcControl.clearSubscriptionGroups(user.minecraftLink.mcUsername);
+        console.log(`Cleared subscription groups for ${user.minecraftLink.mcUsername}`);
+      } catch (groupError) {
+        console.error(`Failed to clear LuckPerms groups for ${user.minecraftLink.mcUsername}:`, groupError);
+      }
     }
   } catch (error) {
     console.error('Failed to remove user from whitelist:', error);
+  }
+}
+
+// Helper to update player's LuckPerms group when tier changes
+async function updatePlayerGroup(userId: string, newTier: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { minecraftLink: true },
+    });
+
+    if (user?.minecraftLink?.mcUsername) {
+      const groupResult = await mcControl.setPlayerGroup(user.minecraftLink.mcUsername, newTier);
+      console.log(`Updated ${user.minecraftLink.mcUsername} to group '${newTier}':`, groupResult.response);
+    }
+  } catch (error) {
+    console.error('Failed to update player group:', error);
   }
 }

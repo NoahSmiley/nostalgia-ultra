@@ -63,6 +63,32 @@ export class McControlClient {
     });
   }
 
+  // LuckPerms group management
+  async setPlayerGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
+    // Set the player's primary group (replaces existing primary group)
+    return this.executeCommand(`lp user ${username} parent set ${group}`);
+  }
+
+  async addPlayerToGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`lp user ${username} parent add ${group}`);
+  }
+
+  async removePlayerFromGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`lp user ${username} parent remove ${group}`);
+  }
+
+  async clearSubscriptionGroups(username: string): Promise<void> {
+    // Remove player from all subscription-related groups
+    const subscriptionGroups = ['member', 'ultra'];
+    for (const group of subscriptionGroups) {
+      try {
+        await this.removePlayerFromGroup(username, group);
+      } catch {
+        // Ignore errors if user isn't in the group
+      }
+    }
+  }
+
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
     const response = await fetch(`${this.baseUrl}/health`);
     return response.json();
