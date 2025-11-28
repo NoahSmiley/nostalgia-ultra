@@ -95,7 +95,7 @@ export default function InstallGuidePage() {
               </div>
             </div>
             <ul className="text-sm text-muted-foreground space-y-1 ml-[52px]">
-              <li>• ~40 mods (server essentials)</li>
+              <li>• {SERVER_CONFIG.modCount}+ mods (server essentials)</li>
               <li>• Voice chat, world gen, gameplay mods</li>
               <li>• Auto-updates on every launch</li>
               <li>• Works on any computer</li>
@@ -144,7 +144,7 @@ export default function InstallGuidePage() {
               </div>
             </div>
             <ul className="text-sm text-muted-foreground space-y-1 ml-[52px]">
-              <li>• 74+ mods with all enhancements</li>
+              <li>• {SERVER_CONFIG.modCountUltra}+ mods with all enhancements</li>
               <li>• Shaders (Complementary, BSL, Bliss)</li>
               <li>• Performance mods (Sodium, Iris, Nvidium)</li>
               <li>• Visual effects, animations, sounds</li>
