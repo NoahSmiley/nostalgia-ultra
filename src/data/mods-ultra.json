@@ -1,5 +1,15 @@
 [
   {
+    "name": "[EMF] Entity Model Features",
+    "side": "client",
+    "modrinthId": "4I1XuqiY"
+  },
+  {
+    "name": "[ETF] Entity Texture Features",
+    "side": "client",
+    "modrinthId": "BVzZfTc1"
+  },
+  {
     "name": "Accessories",
     "side": "both",
     "modrinthId": "jtmvUHXj"
@@ -13,6 +23,11 @@
     "name": "Analog",
     "side": "server",
     "modrinthId": "OpqpD8K2"
+  },
+  {
+    "name": "AppleSkin",
+    "side": "both",
+    "modrinthId": "EsAfCjCV"
   },
   {
     "name": "Architectury API",
@@ -50,9 +65,19 @@
     "modrinthId": "89Wsn8GD"
   },
   {
+    "name": "Chat Heads",
+    "side": "client",
+    "modrinthId": "Wb5oqrBJ"
+  },
+  {
     "name": "Chunky",
     "side": "both",
     "modrinthId": "fALzjamp"
+  },
+  {
+    "name": "CICADA",
+    "side": "both",
+    "modrinthId": "IwCkru1D"
   },
   {
     "name": "CIT Resewn",
@@ -63,6 +88,16 @@
     "name": "Cloth Config API",
     "side": "both",
     "modrinthId": "9s6osm5g"
+  },
+  {
+    "name": "Clumps",
+    "side": "both",
+    "modrinthId": "Wnxd13zP"
+  },
+  {
+    "name": "Collective",
+    "side": "both",
+    "modrinthId": "e0M1UDsY"
   },
   {
     "name": "Continents",
@@ -80,6 +115,11 @@
     "modrinthId": "61PI8Hzj"
   },
   {
+    "name": "Crawl",
+    "side": "both",
+    "modrinthId": "H1JOVjhn"
+  },
+  {
     "name": "Diagonal Fences",
     "side": "both",
     "modrinthId": "IKARgflD"
@@ -88,6 +128,11 @@
     "name": "Distant Horizons",
     "side": "both",
     "modrinthId": "uCdwusMi"
+  },
+  {
+    "name": "Do a Barrel Roll",
+    "side": "both",
+    "modrinthId": "6FtRfnLg"
   },
   {
     "name": "Dynamic Surroundings",
@@ -105,19 +150,14 @@
     "modrinthId": "pcPXJeZi"
   },
   {
-    "name": "[EMF] Entity Model Features",
-    "side": "client",
-    "modrinthId": "4I1XuqiY"
+    "name": "Elytra Slot",
+    "side": "both",
+    "modrinthId": "mSQF1NpT"
   },
   {
     "name": "Entity Culling",
     "side": "client",
     "modrinthId": "NNAgCjsB"
-  },
-  {
-    "name": "[ETF] Entity Texture Features",
-    "side": "client",
-    "modrinthId": "BVzZfTc1"
   },
   {
     "name": "Explosive Enhancement",
@@ -165,14 +205,14 @@
     "modrinthId": "8BmcQJ2H"
   },
   {
+    "name": "Harvest",
+    "side": "server",
+    "modrinthId": "1DgT4iww"
+  },
+  {
     "name": "ImmediatelyFast",
     "side": "client",
     "modrinthId": "5ZwdcRci"
-  },
-  {
-    "name": "Toni's Immersive Lanterns",
-    "side": "both",
-    "modrinthId": "vskzdsyT"
   },
   {
     "name": "Indium",
@@ -183,6 +223,11 @@
     "name": "Iris Shaders",
     "side": "client",
     "modrinthId": "YL57xq9U"
+  },
+  {
+    "name": "Just Enough Items (JEI)",
+    "side": "both",
+    "modrinthId": "u6dRKJwZ"
   },
   {
     "name": "LambdaBetterGrass",
@@ -200,19 +245,29 @@
     "modrinthId": "XaDC71GB"
   },
   {
+    "name": "M.R.U",
+    "side": "both",
+    "modrinthId": "SNVQ2c0g"
+  },
+  {
     "name": "Marium's Soulslike Weaponry",
     "side": "both",
     "modrinthId": "oX6SohLj"
   },
   {
-    "name": "ModernFix",
-    "side": "both",
-    "modrinthId": "nmDcB62a"
-  },
-  {
     "name": "Mod Menu",
     "side": "client",
     "modrinthId": "mOgUt4GM"
+  },
+  {
+    "name": "Model Gap Fix",
+    "side": "client",
+    "modrinthId": "QdG47OkI"
+  },
+  {
+    "name": "ModernFix",
+    "side": "both",
+    "modrinthId": "nmDcB62a"
   },
   {
     "name": "Moonlight Lib",
@@ -225,9 +280,9 @@
     "modrinthId": "51shyZVL"
   },
   {
-    "name": "M.R.U",
-    "side": "both",
-    "modrinthId": "SNVQ2c0g"
+    "name": "Mouse Tweaks",
+    "side": "client",
+    "modrinthId": "aC3cM3Vq"
   },
   {
     "name": "Nature's Compass",
@@ -243,6 +298,11 @@
     "name": "Nvidium",
     "side": "client",
     "modrinthId": "SfMw2IZN"
+  },
+  {
+    "name": "Nyf's Spiders",
+    "side": "both",
+    "modrinthId": "dOGM7ccu"
   },
   {
     "name": "OctoLib",
@@ -263,11 +323,6 @@
     "name": "Particular ✨",
     "side": "client",
     "modrinthId": "B1CcCd9h"
-  },
-  {
-    "name": "Text Placeholder API",
-    "side": "both",
-    "modrinthId": "eXts2L7r"
   },
   {
     "name": "Player Animation Library",
@@ -300,9 +355,19 @@
     "modrinthId": "a9PBgIsO"
   },
   {
+    "name": "Realistic Bees",
+    "side": "both",
+    "modrinthId": "tG6HkcWx"
+  },
+  {
     "name": "Shoulder Surfing Reloaded",
     "side": "client",
     "modrinthId": "kepjj2sy"
+  },
+  {
+    "name": "Shulker Box Tooltip",
+    "side": "both",
+    "modrinthId": "2M01OLQq"
   },
   {
     "name": "Simple Voice Chat",
@@ -310,14 +375,14 @@
     "modrinthId": "9eGKb6K1"
   },
   {
-    "name": "Sodium Dynamic Lights",
-    "side": "client",
-    "modrinthId": "PxQSWIcD"
-  },
-  {
     "name": "Sodium",
     "side": "client",
     "modrinthId": "AANobbMI"
+  },
+  {
+    "name": "Sodium Dynamic Lights",
+    "side": "client",
+    "modrinthId": "PxQSWIcD"
   },
   {
     "name": "Sound Physics Remastered",
@@ -333,6 +398,21 @@
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
+  },
+  {
+    "name": "Text Placeholder API",
+    "side": "both",
+    "modrinthId": "eXts2L7r"
+  },
+  {
+    "name": "Toni's Immersive Lanterns",
+    "side": "both",
+    "modrinthId": "vskzdsyT"
+  },
+  {
+    "name": "Trinkets",
+    "side": "both",
+    "modrinthId": "5aaWibi9"
   },
   {
     "name": "TxniLib",
@@ -353,6 +433,16 @@
     "name": "Wavey Capes",
     "side": "client",
     "modrinthId": "kYuIpRLv"
+  },
+  {
+    "name": "Xaero's Minimap",
+    "side": "both",
+    "modrinthId": "1bokaNcj"
+  },
+  {
+    "name": "Xaero's World Map",
+    "side": "both",
+    "modrinthId": "NcUtCpym"
   },
   {
     "name": "YetAnotherConfigLib (YACL)",
