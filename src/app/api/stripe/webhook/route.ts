@@ -343,7 +343,7 @@ async function addToWhitelist(userId: string) {
       where: { id: userId },
       include: {
         minecraftLink: true,
-        subscription: true,
+        subscriptions: true,
       },
     });
 
@@ -352,8 +352,9 @@ async function addToWhitelist(userId: string) {
       const result = await mcControl.addToWhitelist(user.minecraftLink.mcUsername);
       console.log(`Added ${user.minecraftLink.mcUsername} to whitelist:`, result.message);
 
-      // Determine tier and assign LuckPerms group
-      const tier = user.subscription?.tier || 'member';
+      // Determine tier and assign LuckPerms group (get active subscription)
+      const activeSubscription = user.subscriptions?.find(s => s.status === 'active');
+      const tier = activeSubscription?.tier || 'member';
       try {
         const groupResult = await mcControl.setPlayerGroup(user.minecraftLink.mcUsername, tier);
         console.log(`Set ${user.minecraftLink.mcUsername} to group '${tier}':`, groupResult.response);

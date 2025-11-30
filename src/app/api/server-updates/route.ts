@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 // GET - Fetch all server updates
 export async function GET() {
   try {
-    const updates = await db.serverUpdate.findMany({
+    const updates = await prisma.serverUpdate.findMany({
       orderBy: { createdAt: "desc" },
     });
 
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const update = await db.serverUpdate.create({
+    const update = await prisma.serverUpdate.create({
       data: {
         title,
         description,

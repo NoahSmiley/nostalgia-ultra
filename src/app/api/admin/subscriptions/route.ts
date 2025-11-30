@@ -96,6 +96,29 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (action === 'upgrade_tier' && userId) {
+      // Upgrade a user's subscription tier
+      const { tier } = body;
+      if (!tier || !['member', 'ultra'].includes(tier)) {
+        return NextResponse.json({ error: 'Invalid tier. Must be "member" or "ultra"' }, { status: 400 });
+      }
+
+      const sub = await prisma.subscription.findFirst({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      if (sub) {
+        const updated = await prisma.subscription.update({
+          where: { id: sub.id },
+          data: { tier },
+        });
+        return NextResponse.json({ message: `Subscription upgraded to ${tier}`, subscription: updated });
+      } else {
+        return NextResponse.json({ error: 'No subscription found for user' }, { status: 404 });
+      }
+    }
+
     if (action === 'create_from_stripe' && stripeCustomerId) {
       // Look up customer's subscriptions in Stripe and create in DB
       const stripeSubs = await stripe.subscriptions.list({

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 // GET - Fetch the latest update for the banner
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const latestUpdate = await db.serverUpdate.findFirst({
+    const latestUpdate = await prisma.serverUpdate.findFirst({
       where: {
         isHighlight: true,
         createdAt: { gte: sevenDaysAgo },

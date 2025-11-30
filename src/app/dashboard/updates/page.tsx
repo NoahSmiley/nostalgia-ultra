@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Download } from "lucide-react";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 async function getModpackVersions() {
   try {
@@ -18,7 +18,7 @@ async function getModpackVersions() {
 
 async function getServerUpdates() {
   try {
-    const updates = await db.serverUpdate.findMany({
+    const updates = await prisma.serverUpdate.findMany({
       orderBy: { createdAt: "desc" },
       take: 10, // Last 10 updates
     });
