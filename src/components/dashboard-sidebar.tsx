@@ -134,8 +134,8 @@ export function DashboardSidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar - Fixed */}
-      <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[200px] bg-background z-40">
+      {/* Desktop Sidebar - Fixed but respects banner space */}
+      <aside className="hidden lg:flex flex-col fixed left-0 bottom-0 w-[200px] bg-background z-40" style={{ top: 'var(--banner-height, 0px)' }}>
         {/* Logo Section - OpenAI Style */}
         <div className="px-6 pt-5 pb-28">
           <Link href="/dashboard">
