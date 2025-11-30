@@ -94,3 +94,12 @@ model ModpackVersion {
   releasedAt  DateTime @default(now())
   changelogMd String
 }
+
+model ServerUpdate {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  changes     String[] // Array of change items
+  isHighlight Boolean  @default(false) // Show with special styling
+  createdAt   DateTime @default(now())
+}

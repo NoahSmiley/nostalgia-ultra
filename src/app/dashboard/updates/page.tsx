@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Download } from "lucide-react";
+import { db } from "@/lib/db";
 
 async function getModpackVersions() {
   try {
@@ -15,8 +16,38 @@ async function getModpackVersions() {
   }
 }
 
+async function getServerUpdates() {
+  try {
+    const updates = await db.serverUpdate.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10, // Last 10 updates
+    });
+    return updates;
+  } catch (error) {
+    console.error("Error fetching server updates:", error);
+    return [];
+  }
+}
+
+function formatDate(date: Date): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+function isNew(date: Date): boolean {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  return new Date(date) > sevenDaysAgo;
+}
+
 export default async function UpdatesPage() {
-  const modpackVersions = await getModpackVersions();
+  const [modpackVersions, serverUpdates] = await Promise.all([
+    getModpackVersions(),
+    getServerUpdates(),
+  ]);
 
   return (
     <div className="w-full">
@@ -84,76 +115,51 @@ export default async function UpdatesPage() {
 
       <Separator className="my-12" />
 
-      {/* Server Updates */}
+      {/* Server Updates - Dynamic from Database */}
       <div className="mb-16">
         <h2 className="text-2xl font-semibold text-foreground mb-8">Recent Server Changes</h2>
         <div className="space-y-4">
-          {/* November 30, 2024 Update */}
-          <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground">15+ New Mods Added</span>
-                <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">New</span>
+          {serverUpdates.length > 0 ? (
+            serverUpdates.map((update) => (
+              <div
+                key={update.id}
+                className={`rounded-xl p-5 ${
+                  update.isHighlight
+                    ? "border border-primary/30 bg-primary/5"
+                    : "border border-border"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">{update.title}</span>
+                    {isNew(update.createdAt) && (
+                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">
+                        New
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    {formatDate(update.createdAt)}
+                  </span>
+                </div>
+                <p className="text-muted-foreground mb-3">{update.description}</p>
+                {update.changes && update.changes.length > 0 && (
+                  <div className="grid sm:grid-cols-2 gap-2 text-sm">
+                    {update.changes.map((change, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
+                        <span className="text-muted-foreground">{change}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <span className="text-sm text-muted-foreground">Nov 30, 2024</span>
+            ))
+          ) : (
+            <div className="rounded-2xl border border-border bg-card p-8 text-center">
+              <p className="text-muted-foreground">No server updates yet.</p>
             </div>
-            <p className="text-muted-foreground mb-3">Major modpack update with new gameplay features and quality-of-life improvements.</p>
-            <div className="grid sm:grid-cols-2 gap-2 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">JEI (Just Enough Items) - Recipe viewer</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">Xaero's Minimap & World Map</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">Mouse Tweaks - Better inventory management</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">AppleSkin - Food/saturation HUD</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">Elytra Slot - Wear elytra in trinket slot</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">Do a Barrel Roll - Elytra flight tricks</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">Crawl - Crawl through 1-block gaps</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                <span className="text-muted-foreground">+ 10 more mods</span>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-xl border border-border p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-foreground">Minecraft 1.21.1 Update</span>
-              <span className="text-sm text-muted-foreground">Nov 20, 2024</span>
-            </div>
-            <p className="text-muted-foreground">Server updated to the latest Minecraft version with all mods updated.</p>
-          </div>
-          <div className="rounded-xl border border-border p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-foreground">New Spawn Area</span>
-              <span className="text-sm text-muted-foreground">Nov 13, 2024</span>
-            </div>
-            <p className="text-muted-foreground">Completely redesigned spawn area with better navigation and shops.</p>
-          </div>
-          <div className="rounded-xl border border-border p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-foreground">Performance Improvements</span>
-              <span className="text-sm text-muted-foreground">Nov 6, 2024</span>
-            </div>
-            <p className="text-muted-foreground">Optimized server configuration for better TPS and reduced lag.</p>
-          </div>
+          )}
         </div>
       </div>
 
@@ -171,7 +177,9 @@ export default async function UpdatesPage() {
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <p className="text-3xl font-semibold text-foreground">
-              {modpackVersions.length > 0
+              {serverUpdates.length > 0
+                ? formatDate(serverUpdates[0].createdAt).replace(', 2024', '')
+                : modpackVersions.length > 0
                 ? new Date(modpackVersions[0].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                 : 'N/A'
               }
