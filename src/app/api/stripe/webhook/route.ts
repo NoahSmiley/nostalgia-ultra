@@ -357,7 +357,7 @@ async function addToWhitelist(userId: string) {
       const tier = activeSubscription?.tier || 'member';
       try {
         const groupResult = await mcControl.setPlayerGroup(user.minecraftLink.mcUsername, tier);
-        console.log(`Set ${user.minecraftLink.mcUsername} to group '${tier}':`, groupResult.response);
+        console.log(`Set ${user.minecraftLink.mcUsername} to group '${tier}':`, groupResult.results || groupResult.error);
       } catch (groupError) {
         console.error(`Failed to set LuckPerms group for ${user.minecraftLink.mcUsername}:`, groupError);
         // Don't throw - whitelist succeeded, group is secondary
@@ -403,7 +403,7 @@ async function updatePlayerGroup(userId: string, newTier: string) {
 
     if (user?.minecraftLink?.mcUsername) {
       const groupResult = await mcControl.setPlayerGroup(user.minecraftLink.mcUsername, newTier);
-      console.log(`Updated ${user.minecraftLink.mcUsername} to group '${newTier}':`, groupResult.response);
+      console.log(`Updated ${user.minecraftLink.mcUsername} to group '${newTier}':`, groupResult.results || groupResult.error);
     }
   } catch (error) {
     console.error('Failed to update player group:', error);

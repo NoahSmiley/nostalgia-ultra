@@ -3,6 +3,19 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { mcControl } from "@/lib/mc-control";
 
+// MiniMessage formatted prefixes for each tier
+// Only Ultra and Admin tiers get a prefix - members have no tag
+const TIER_PREFIXES: Record<string, string> = {
+  ultra: "<color:#61DAFB>[Ultra]</color>",
+  admin: "<color:#FF5555>[Admin]</color>",
+};
+
+// Format nickname with tier prefix for in-game display
+function formatNicknameWithPrefix(nickname: string, tier: string | null): string {
+  const prefix = tier ? TIER_PREFIXES[tier] : null;
+  return prefix ? `${prefix} <white>${nickname}</white>` : `<white>${nickname}</white>`;
+}
+
 async function isAdmin(userId: string): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -157,15 +170,71 @@ export async function POST(request: Request) {
         if (!username || !params.group) {
           return NextResponse.json({ error: "Username and group are required" }, { status: 400 });
         }
-        const result = await mcControl.setPlayerGroup(username, params.group);
-        return NextResponse.json(result);
+        const tier = params.group as string;
+
+        // Update LuckPerms group in-game
+        const result = await mcControl.setPlayerGroup(username, tier);
+
+        let nicknameCleared = false;
+        let hadNickname = false;
+
+        // Also update database subscription if userId provided
+        if (userId) {
+          // Find or create subscription for user
+          const existingSub = await prisma.subscription.findFirst({
+            where: { userId, status: "active" },
+          });
+
+          if (existingSub) {
+            // Update existing subscription tier
+            await prisma.subscription.update({
+              where: { id: existingSub.id },
+              data: { tier },
+            });
+          } else {
+            // Create admin-granted subscription
+            await prisma.subscription.create({
+              data: {
+                userId,
+                tier,
+                status: "active",
+                isLifetime: true, // Admin-granted subscriptions are lifetime
+                monthlyAmount: 0, // Admin-granted, no payment
+              },
+            });
+          }
+
+          // Update nickname with new tier prefix (or clear if no nickname)
+          const mcAccount = await prisma.minecraftAccount.findUnique({
+            where: { userId },
+          });
+          hadNickname = !!mcAccount?.nickname;
+          if (mcAccount?.nickname) {
+            // User has a nickname - update it with the new tier prefix
+            const formattedNickname = formatNicknameWithPrefix(mcAccount.nickname, tier);
+            await mcControl.setNicknameOnAllServers(username, formattedNickname);
+          } else {
+            // No nickname in database - clear any in-game nickname to remove stale prefixes
+            nicknameCleared = true;
+            await mcControl.clearNicknameOnAllServers(username);
+          }
+        }
+
+        return NextResponse.json({
+          ...result,
+          tier,
+          message: `Set ${username} to ${tier}`,
+          nicknameCleared,
+          hadNickname,
+          userId: userId || null,
+        });
       }
 
       case "add_group": {
         if (!username || !params.group) {
           return NextResponse.json({ error: "Username and group are required" }, { status: 400 });
         }
-        const result = await mcControl.addPlayerToGroup(username, params.group);
+        const result = await mcControl.addPlayerToGroup(username, params.group as string);
         return NextResponse.json(result);
       }
 
@@ -173,23 +242,54 @@ export async function POST(request: Request) {
         if (!username || !params.group) {
           return NextResponse.json({ error: "Username and group are required" }, { status: 400 });
         }
-        const result = await mcControl.removePlayerFromGroup(username, params.group);
-        return NextResponse.json(result);
+        const result = await mcControl.removePlayerFromGroup(username, params.group as string);
+
+        // Also deactivate subscription in database if userId provided
+        if (userId) {
+          await prisma.subscription.updateMany({
+            where: { userId, status: "active" },
+            data: { status: "canceled" },
+          });
+
+          // If user has a nickname, update it without tier prefix
+          const mcAccount = await prisma.minecraftAccount.findUnique({
+            where: { userId },
+          });
+          if (mcAccount?.nickname) {
+            const formattedNickname = formatNicknameWithPrefix(mcAccount.nickname, null);
+            await mcControl.setNicknameOnAllServers(username, formattedNickname);
+          }
+        }
+
+        return NextResponse.json({ ...result, message: `Removed ${username} from all roles` });
       }
 
       case "set_nickname": {
         if (!username || !params.nickname) {
           return NextResponse.json({ error: "Username and nickname are required" }, { status: 400 });
         }
-        // Update in database
+        // Update in database and get user's subscription tier
+        let userTier: string | null = null;
         if (userId) {
+          const userWithSub = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+              subscriptions: {
+                where: { status: "active" },
+                take: 1,
+              },
+            },
+          });
+          userTier = userWithSub?.subscriptions[0]?.tier || null;
+
           await prisma.minecraftAccount.update({
             where: { userId },
             data: { nickname: params.nickname },
           });
         }
-        // Update in game
-        const result = await mcControl.setPlayerNickname(username, params.nickname);
+        // Format nickname with tier prefix and update in game on all backend servers
+        const formattedNickname = formatNicknameWithPrefix(params.nickname, userTier);
+        const result = await mcControl.setNicknameOnAllServers(username, formattedNickname);
         return NextResponse.json(result);
       }
 
@@ -204,8 +304,8 @@ export async function POST(request: Request) {
             data: { nickname: null },
           });
         }
-        // Update in game
-        const result = await mcControl.clearPlayerNickname(username);
+        // Update in game on all backend servers via RCON
+        const result = await mcControl.clearNicknameOnAllServers(username);
         return NextResponse.json(result);
       }
 

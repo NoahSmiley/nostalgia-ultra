@@ -370,6 +370,12 @@ export default function AdminPlayersPage() {
                         Admin
                       </Badge>
                     )}
+                    {player.subscription?.tier === "admin" && (
+                      <Badge className="bg-red-500/10 text-red-400 border-red-500/20">
+                        <Shield className="h-3 w-3 mr-1" />
+                        Admin Tag
+                      </Badge>
+                    )}
                     {player.subscription?.tier === "ultra" && (
                       <Badge className="bg-purple-500/10 text-purple-500 border-purple-500/20">
                         <Crown className="h-3 w-3 mr-1" />
@@ -426,8 +432,8 @@ export default function AdminPlayersPage() {
                 {/* Actions */}
                 {player.minecraft && (
                   <div className="flex flex-wrap gap-2">
-                    {/* Nickname (Ultra only) */}
-                    {player.subscription?.tier === "ultra" && (
+                    {/* Nickname (Ultra or Admin only) */}
+                    {(player.subscription?.tier === "ultra" || player.subscription?.tier === "admin") && (
                       editingNickname === player.id ? (
                         <div className="flex gap-2">
                           <Input
@@ -526,11 +532,13 @@ export default function AdminPlayersPage() {
                         if (tier === "none") {
                           performAction("remove_group", {
                             username: player.minecraft?.username,
+                            userId: player.id,
                             group: player.subscription?.tier,
                           });
                         } else {
                           performAction("set_group", {
                             username: player.minecraft?.username,
+                            userId: player.id,
                             group: tier,
                           });
                         }
@@ -543,6 +551,9 @@ export default function AdminPlayersPage() {
                         <SelectItem value="none">No Role</SelectItem>
                         <SelectItem value="member">Member</SelectItem>
                         <SelectItem value="ultra">Ultra</SelectItem>
+                        {player.isAdmin && (
+                          <SelectItem value="admin">Admin</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
 

@@ -81,17 +81,30 @@ export class McControlClient {
     });
   }
 
-  // LuckPerms group management
-  async setPlayerGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`lp user ${username} parent set ${group}`);
+  // LuckPerms group management - runs on all backend servers via RCON
+  // Using full "luckperms" command name for Fabric compatibility
+  async setPlayerGroup(username: string, group: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    // First remove all role groups (ultra, member, admin) to ensure clean state
+    const roleGroups = ['ultra', 'member', 'admin'];
+    for (const oldGroup of roleGroups) {
+      if (oldGroup !== group) {
+        try {
+          await this.executeOnAllBackends(`luckperms user ${username} parent remove ${oldGroup}`);
+        } catch {
+          // Ignore errors if user isn't in the group
+        }
+      }
+    }
+    // Then add the new group
+    return this.executeOnAllBackends(`luckperms user ${username} parent add ${group}`);
   }
 
-  async addPlayerToGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`lp user ${username} parent add ${group}`);
+  async addPlayerToGroup(username: string, group: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.executeOnAllBackends(`luckperms user ${username} parent add ${group}`);
   }
 
-  async removePlayerFromGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`lp user ${username} parent remove ${group}`);
+  async removePlayerFromGroup(username: string, group: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.executeOnAllBackends(`luckperms user ${username} parent remove ${group}`);
   }
 
   async clearSubscriptionGroups(username: string): Promise<void> {

@@ -5,10 +5,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -19,31 +19,64 @@ import {
 import {
   Megaphone,
   Send,
-  Clock,
   AlertCircle,
   Check,
   Loader2,
-  Sparkles,
   Info,
   History,
+  Volume2,
+  MonitorPlay,
+  AlertTriangle,
+  PartyPopper,
+  RefreshCw,
 } from "lucide-react";
 
 interface AnnouncementHistory {
   id: string;
   message: string;
-  type: string;
+  style: string;
   sentAt: string;
   sentBy: string;
-  scheduled?: string;
 }
+
+const ANNOUNCEMENT_STYLES = {
+  standard: {
+    label: "Standard",
+    icon: Megaphone,
+    description: "Gold/yellow theme for general announcements",
+    color: "text-yellow-400",
+    bgColor: "bg-yellow-500/10 border-yellow-500/20",
+  },
+  important: {
+    label: "Important",
+    icon: AlertTriangle,
+    description: "Red theme for urgent messages",
+    color: "text-red-400",
+    bgColor: "bg-red-500/10 border-red-500/20",
+  },
+  event: {
+    label: "Event",
+    icon: PartyPopper,
+    description: "Purple/pink theme for events",
+    color: "text-purple-400",
+    bgColor: "bg-purple-500/10 border-purple-500/20",
+  },
+  update: {
+    label: "Update",
+    icon: RefreshCw,
+    description: "Green theme for updates",
+    color: "text-green-400",
+    bgColor: "bg-green-500/10 border-green-500/20",
+  },
+};
 
 export default function AdminAnnouncePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [message, setMessage] = useState("");
-  const [type, setType] = useState<"alert" | "formatted">("alert");
-  const [scheduleType, setScheduleType] = useState<"immediate" | "scheduled">("immediate");
-  const [scheduledTime, setScheduledTime] = useState("");
+  const [style, setStyle] = useState<keyof typeof ANNOUNCEMENT_STYLES>("standard");
+  const [showTitle, setShowTitle] = useState(true);
+  const [playSound, setPlaySound] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -64,11 +97,6 @@ export default function AdminAnnouncePage() {
       return;
     }
 
-    if (scheduleType === "scheduled" && !scheduledTime) {
-      setError("Please select a scheduled time");
-      return;
-    }
-
     setSending(true);
     setError(null);
     setSuccess(null);
@@ -79,8 +107,9 @@ export default function AdminAnnouncePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: message.trim(),
-          type,
-          scheduled: scheduleType === "scheduled" ? scheduledTime : undefined,
+          style,
+          showTitle,
+          playSound,
         }),
       });
 
@@ -89,11 +118,7 @@ export default function AdminAnnouncePage() {
       if (!res.ok) {
         setError(data.error || "Failed to send announcement");
       } else {
-        setSuccess(
-          scheduleType === "scheduled"
-            ? `Announcement scheduled for ${new Date(scheduledTime).toLocaleString()}`
-            : "Announcement sent successfully!"
-        );
+        setSuccess("Announcement sent successfully!");
         setMessage("");
 
         // Add to local history
@@ -101,10 +126,9 @@ export default function AdminAnnouncePage() {
           {
             id: Date.now().toString(),
             message: message.trim(),
-            type,
+            style,
             sentAt: new Date().toISOString(),
             sentBy: session?.user?.email || "Unknown",
-            scheduled: scheduleType === "scheduled" ? scheduledTime : undefined,
           },
           ...prev,
         ]);
@@ -118,10 +142,12 @@ export default function AdminAnnouncePage() {
   };
 
   const presetMessages = [
-    { label: "Restart 5min", message: "Server restart in 5 minutes! Please find a safe place to log out." },
-    { label: "Restart 10min", message: "Server restart in 10 minutes! Save your progress." },
-    { label: "Maintenance", message: "Server going down for maintenance. Back online shortly!" },
-    { label: "Welcome", message: "Welcome to Nostalgia Ultra! Enjoy your stay." },
+    { label: "Restart 5min", message: "Server restart in 5 minutes! Please find a safe place to log out.", style: "important" as const },
+    { label: "Restart 10min", message: "Server restart in 10 minutes. Save your progress!", style: "standard" as const },
+    { label: "Maintenance", message: "Server going down for maintenance. Back online shortly!", style: "important" as const },
+    { label: "Welcome", message: "Welcome to Nostalgia Ultra! Enjoy your stay.", style: "standard" as const },
+    { label: "New Update", message: "A new update has been deployed! Check out the changelog.", style: "update" as const },
+    { label: "Event Starting", message: "A special event is starting now! Join in on the fun.", style: "event" as const },
   ];
 
   if (status === "loading") {
@@ -141,6 +167,9 @@ export default function AdminAnnouncePage() {
     return null;
   }
 
+  const currentStyle = ANNOUNCEMENT_STYLES[style];
+  const StyleIcon = currentStyle.icon;
+
   return (
     <div className="w-full">
       {/* Hero */}
@@ -148,7 +177,7 @@ export default function AdminAnnouncePage() {
         <p className="text-sm font-medium text-primary mb-4">Admin</p>
         <h1 className="text-h1 text-foreground mb-6">Server Announcements</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
-          Send announcements to all players currently online in the server.
+          Send eye-catching announcements to all players with titles, sounds, and styled messages.
         </p>
       </div>
 
@@ -163,7 +192,7 @@ export default function AdminAnnouncePage() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Compose Announcement</h2>
-                <p className="text-sm text-muted-foreground">This will be sent to all online players</p>
+                <p className="text-sm text-muted-foreground">Sends to all online players on all servers</p>
               </div>
             </div>
 
@@ -182,33 +211,58 @@ export default function AdminAnnouncePage() {
               </div>
             )}
 
-            {/* Message Type */}
-            <div className="mb-4">
-              <Label className="text-sm font-medium mb-2 block">Message Type</Label>
-              <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="alert">
-                    <div className="flex items-center gap-2">
-                      <Megaphone className="h-4 w-4" />
-                      <span>Simple Alert</span>
+            {/* Announcement Style */}
+            <div className="mb-6">
+              <Label className="text-sm font-medium mb-3 block">Announcement Style</Label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {(Object.entries(ANNOUNCEMENT_STYLES) as [keyof typeof ANNOUNCEMENT_STYLES, typeof ANNOUNCEMENT_STYLES.standard][]).map(([key, s]) => {
+                  const Icon = s.icon;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => setStyle(key)}
+                      className={`p-4 rounded-lg border-2 transition-all text-left ${
+                        style === key
+                          ? `${s.bgColor} border-current ${s.color}`
+                          : "border-border bg-muted/30 hover:bg-muted/50"
+                      }`}
+                    >
+                      <Icon className={`h-5 w-5 mb-2 ${style === key ? s.color : "text-muted-foreground"}`} />
+                      <p className={`font-medium text-sm ${style === key ? s.color : "text-foreground"}`}>{s.label}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{s.description}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Options */}
+            <div className="mb-6 grid grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg border ${showTitle ? currentStyle.bgColor : "border-border bg-muted/30"}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <MonitorPlay className={`h-5 w-5 ${showTitle ? currentStyle.color : "text-muted-foreground"}`} />
+                    <div>
+                      <p className="font-medium text-sm">Show Title</p>
+                      <p className="text-xs text-muted-foreground">Big text on screen</p>
                     </div>
-                  </SelectItem>
-                  <SelectItem value="formatted">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" />
-                      <span>Formatted (MiniMessage)</span>
+                  </div>
+                  <Switch checked={showTitle} onCheckedChange={setShowTitle} />
+                </div>
+              </div>
+
+              <div className={`p-4 rounded-lg border ${playSound ? currentStyle.bgColor : "border-border bg-muted/30"}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Volume2 className={`h-5 w-5 ${playSound ? currentStyle.color : "text-muted-foreground"}`} />
+                    <div>
+                      <p className="font-medium text-sm">Play Sound</p>
+                      <p className="text-xs text-muted-foreground">Alert notification</p>
                     </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {type === "formatted" && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  Use MiniMessage formatting: &lt;red&gt;text&lt;/red&gt;, &lt;bold&gt;, &lt;gradient:#ff0000:#00ff00&gt;
-                </p>
-              )}
+                  </div>
+                  <Switch checked={playSound} onCheckedChange={setPlaySound} />
+                </div>
+              </div>
             </div>
 
             {/* Quick Presets */}
@@ -220,7 +274,10 @@ export default function AdminAnnouncePage() {
                     key={preset.label}
                     variant="outline"
                     size="sm"
-                    onClick={() => setMessage(preset.message)}
+                    onClick={() => {
+                      setMessage(preset.message);
+                      setStyle(preset.style);
+                    }}
                   >
                     {preset.label}
                   </Button>
@@ -229,7 +286,7 @@ export default function AdminAnnouncePage() {
             </div>
 
             {/* Message Input */}
-            <div className="mb-4">
+            <div className="mb-6">
               <Label className="text-sm font-medium mb-2 block">Message</Label>
               <Textarea
                 value={message}
@@ -244,38 +301,22 @@ export default function AdminAnnouncePage() {
               </p>
             </div>
 
-            {/* Schedule */}
-            <div className="mb-6">
-              <Label className="text-sm font-medium mb-2 block">When to Send</Label>
-              <div className="flex gap-4 mb-3">
-                <Button
-                  variant={scheduleType === "immediate" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setScheduleType("immediate")}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send Now
-                </Button>
-                <Button
-                  variant={scheduleType === "scheduled" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setScheduleType("scheduled")}
-                >
-                  <Clock className="h-4 w-4 mr-2" />
-                  Schedule
-                </Button>
+            {/* Preview */}
+            {message.trim() && (
+              <div className="mb-6">
+                <Label className="text-sm font-medium mb-2 block">Preview</Label>
+                <div className={`p-4 rounded-lg border ${currentStyle.bgColor}`}>
+                  <div className="text-center mb-3">
+                    <p className={`text-lg font-bold ${currentStyle.color}`}>
+                      {style === "important" ? "⚠ IMPORTANT ⚠" : style === "event" ? "🎉 EVENT 🎉" : style === "update" ? "🔄 UPDATE 🔄" : "✦ ANNOUNCEMENT ✦"}
+                    </p>
+                  </div>
+                  <div className="border-t border-b border-gray-600 py-3 my-2">
+                    <p className={`text-center ${currentStyle.color}`}>{message}</p>
+                  </div>
+                </div>
               </div>
-
-              {scheduleType === "scheduled" && (
-                <Input
-                  type="datetime-local"
-                  value={scheduledTime}
-                  onChange={(e) => setScheduledTime(e.target.value)}
-                  min={new Date().toISOString().slice(0, 16)}
-                  className="w-full"
-                />
-              )}
-            </div>
+            )}
 
             {/* Send Button */}
             <Button
@@ -287,11 +328,6 @@ export default function AdminAnnouncePage() {
                 <>
                   <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   Sending...
-                </>
-              ) : scheduleType === "scheduled" ? (
-                <>
-                  <Clock className="h-5 w-5 mr-2" />
-                  Schedule Announcement
                 </>
               ) : (
                 <>
@@ -305,17 +341,25 @@ export default function AdminAnnouncePage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Tips */}
+          {/* What Players See */}
           <div className="rounded-xl border border-border bg-card p-6">
             <div className="flex items-center gap-3 mb-4">
               <Info className="h-5 w-5 text-blue-400" />
-              <h3 className="font-semibold text-foreground">Tips</h3>
+              <h3 className="font-semibold text-foreground">What Players See</h3>
             </div>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Announcements go to all online players across all servers</li>
-              <li>• Use formatted messages for colorful announcements</li>
-              <li>• Schedule restarts during low-traffic hours</li>
-              <li>• Keep messages concise and clear</li>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <MonitorPlay className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <span><strong>Title:</strong> Big centered text on their screen</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Volume2 className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <span><strong>Sound:</strong> Note block pling sound</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Megaphone className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <span><strong>Chat:</strong> Formatted message with separator lines</span>
+              </li>
             </ul>
           </div>
 
@@ -329,19 +373,22 @@ export default function AdminAnnouncePage() {
               <p className="text-sm text-muted-foreground">No announcements sent this session</p>
             ) : (
               <div className="space-y-3">
-                {history.slice(0, 5).map((item) => (
-                  <div key={item.id} className="p-3 rounded-lg bg-muted/50">
-                    <p className="text-sm text-foreground line-clamp-2">{item.message}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="outline" className="text-xs">
-                        {item.type}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(item.sentAt).toLocaleTimeString()}
-                      </span>
+                {history.slice(0, 5).map((item) => {
+                  const itemStyle = ANNOUNCEMENT_STYLES[item.style as keyof typeof ANNOUNCEMENT_STYLES] || ANNOUNCEMENT_STYLES.standard;
+                  return (
+                    <div key={item.id} className="p-3 rounded-lg bg-muted/50">
+                      <p className="text-sm text-foreground line-clamp-2">{item.message}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="outline" className={`text-xs ${itemStyle.color}`}>
+                          {itemStyle.label}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(item.sentAt).toLocaleTimeString()}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
