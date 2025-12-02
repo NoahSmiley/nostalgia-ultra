@@ -47,8 +47,9 @@ export default function MinecraftLinkPage() {
       const res = await fetch("/api/subscription");
       if (res.ok) {
         const data = await res.json();
-        if (data.subscription) {
-          setSubscription(data.subscription);
+        // API returns { status, tier, ... } directly, not nested under subscription
+        if (data.status === 'active' && data.tier) {
+          setSubscription({ tier: data.tier, status: data.status });
         }
       }
     } catch (err) {
