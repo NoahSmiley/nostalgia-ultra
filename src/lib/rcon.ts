@@ -1,26 +1,47 @@
 import { Rcon } from 'rcon-client';
 
-// Frontier server RCON configuration
-const FRONTIER_RCON_HOST = process.env.FRONTIER_RCON_HOST || 'n1429.pufferfish.host';
-const FRONTIER_RCON_PORT = parseInt(process.env.FRONTIER_RCON_PORT || '25575');
-const FRONTIER_RCON_PASSWORD = process.env.FRONTIER_RCON_PASSWORD || '';
+// Server RCON configurations
+interface RconConfig {
+  host: string;
+  port: number;
+  password: string;
+}
+
+const RCON_HOST = process.env.RCON_HOST || 'n1429.pufferfish.host';
+
+// Each server has its own RCON port and password
+const serverConfigs: Record<string, RconConfig> = {
+  frontier: {
+    host: RCON_HOST,
+    port: parseInt(process.env.FRONTIER_RCON_PORT || '25575'),
+    password: process.env.FRONTIER_RCON_PASSWORD || '',
+  },
+  spawn: {
+    host: RCON_HOST,
+    port: parseInt(process.env.SPAWN_RCON_PORT || '25576'),
+    password: process.env.SPAWN_RCON_PASSWORD || '',
+  },
+  crucible: {
+    host: RCON_HOST,
+    port: parseInt(process.env.CRUCIBLE_RCON_PORT || '25577'),
+    password: process.env.CRUCIBLE_RCON_PASSWORD || '',
+  },
+};
 
 export class RconClient {
-  private host: string;
-  private port: number;
-  private password: string;
+  private config: RconConfig;
+  private serverName: string;
 
-  constructor(host?: string, port?: number, password?: string) {
-    this.host = host || FRONTIER_RCON_HOST;
-    this.port = port || FRONTIER_RCON_PORT;
-    this.password = password || FRONTIER_RCON_PASSWORD;
+  constructor(serverName: string = 'frontier') {
+    this.serverName = serverName;
+    this.config = serverConfigs[serverName] || serverConfigs.frontier;
   }
 
   async sendCommand(command: string): Promise<string> {
     const rcon = new Rcon({
-      host: this.host,
-      port: this.port,
-      password: this.password,
+      host: this.config.host,
+      port: this.config.port,
+      password: this.config.password,
     });
 
     try {
@@ -29,14 +50,13 @@ export class RconClient {
       await rcon.end();
       return response;
     } catch (error) {
-      console.error('RCON error:', error);
+      console.error(`RCON error (${this.serverName}):`, error);
       throw error;
     }
   }
 
   // Styled-nicknames commands
   async setNickname(username: string, nickname: string): Promise<string> {
-    // styled-nicknames admin command format
     return this.sendCommand(`styled-nicknames set ${username} ${nickname}`);
   }
 
@@ -45,5 +65,51 @@ export class RconClient {
   }
 }
 
-// Default client for Frontier server
-export const frontierRcon = new RconClient();
+// Individual server clients
+export const frontierRcon = new RconClient('frontier');
+export const spawnRcon = new RconClient('spawn');
+export const crucibleRcon = new RconClient('crucible');
+
+// Helper to send a command to all servers
+export async function sendToAllServers(
+  command: string
+): Promise<Record<string, { success: boolean; response?: string; error?: string }>> {
+  const results: Record<string, { success: boolean; response?: string; error?: string }> = {};
+
+  const servers = [
+    { name: 'frontier', client: frontierRcon },
+    { name: 'spawn', client: spawnRcon },
+    { name: 'crucible', client: crucibleRcon },
+  ];
+
+  await Promise.all(
+    servers.map(async ({ name, client }) => {
+      try {
+        const response = await client.sendCommand(command);
+        results[name] = { success: true, response };
+      } catch (error) {
+        results[name] = {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        };
+      }
+    })
+  );
+
+  return results;
+}
+
+// Helper to set nickname on all servers
+export async function setNicknameOnAllServers(
+  username: string,
+  nickname: string
+): Promise<Record<string, { success: boolean; response?: string; error?: string }>> {
+  return sendToAllServers(`styled-nicknames set ${username} ${nickname}`);
+}
+
+// Helper to clear nickname on all servers
+export async function clearNicknameOnAllServers(
+  username: string
+): Promise<Record<string, { success: boolean; response?: string; error?: string }>> {
+  return sendToAllServers(`styled-nicknames clear ${username}`);
+}

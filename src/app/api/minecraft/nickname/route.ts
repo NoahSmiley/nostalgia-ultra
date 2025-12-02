@@ -1,7 +1,20 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { frontierRcon } from "@/lib/rcon";
+import { mcControl } from "@/lib/mc-control";
+
+// MiniMessage formatted prefixes for each subscription tier
+// Ultra uses React blue (#61DAFB), Member uses green
+const TIER_PREFIXES: Record<string, string> = {
+  ultra: "<color:#61DAFB>[Ultra]</color>",
+  member: "<gradient:#22c55e:#10b981>[Member]</gradient>",
+};
+
+// Format nickname with tier prefix for in-game display
+function formatNicknameWithPrefix(nickname: string, tier: string): string {
+  const prefix = TIER_PREFIXES[tier] || "";
+  return prefix ? `${prefix} <white>${nickname}</white>` : `<white>${nickname}</white>`;
+}
 
 // GET - Get current nickname
 export async function GET() {
@@ -60,8 +73,8 @@ export async function POST(request: Request) {
     }
 
     // Check if user has Ultra subscription
-    const hasUltra = user.subscriptions.some(sub => sub.tier === "ultra");
-    if (!hasUltra) {
+    const ultraSub = user.subscriptions.find(sub => sub.tier === "ultra");
+    if (!ultraSub) {
       return NextResponse.json(
         { error: "Nicknames are only available for Ultra members" },
         { status: 403 }
@@ -99,12 +112,15 @@ export async function POST(request: Request) {
       data: { nickname: trimmedNickname },
     });
 
-    // Update in game via RCON to Frontier server
+    // Update in game via MC Control (routes through Velocity to backend servers)
+    // Format nickname with tier prefix for in-game display
+    const formattedNickname = formatNicknameWithPrefix(trimmedNickname, "ultra");
     try {
-      await frontierRcon.setNickname(user.minecraftLink.mcUsername, trimmedNickname);
+      const result = await mcControl.setNicknameOnAllServers(user.minecraftLink.mcUsername, formattedNickname);
+      console.log("Set nickname result:", result);
     } catch (e) {
       console.error("Failed to set nickname in game:", e);
-      // Don't fail the request - DB is updated, game command might fail if server is down
+      // Don't fail the request - DB is updated, game command might fail if servers are down
     }
 
     return NextResponse.json({
@@ -144,9 +160,10 @@ export async function DELETE() {
       data: { nickname: null },
     });
 
-    // Update in game via RCON to Frontier server
+    // Update in game via MC Control
     try {
-      await frontierRcon.clearNickname(user.minecraftLink.mcUsername);
+      const result = await mcControl.clearNicknameOnAllServers(user.minecraftLink.mcUsername);
+      console.log("Clear nickname result:", result);
     } catch (e) {
       console.error("Failed to clear nickname in game:", e);
     }

@@ -83,7 +83,6 @@ export class McControlClient {
 
   // LuckPerms group management
   async setPlayerGroup(username: string, group: string): Promise<{ success: boolean; response: string }> {
-    // Set the player's primary group (replaces existing primary group)
     return this.executeCommand(`lp user ${username} parent set ${group}`);
   }
 
@@ -96,7 +95,6 @@ export class McControlClient {
   }
 
   async clearSubscriptionGroups(username: string): Promise<void> {
-    // Remove player from all subscription-related groups
     const subscriptionGroups = ['member', 'ultra'];
     for (const group of subscriptionGroups) {
       try {
@@ -137,13 +135,49 @@ export class McControlClient {
     });
   }
 
-  // Nickname management (styled-nicknames mod)
+  // Nickname management (styled-nicknames mod on backend servers)
   async setPlayerNickname(username: string, nickname: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`nick set ${username} ${nickname}`);
+    return this.executeCommand(`styled-nicknames set ${username} ${nickname}`);
   }
 
   async clearPlayerNickname(username: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`nick clear ${username}`);
+    return this.executeCommand(`styled-nicknames clear ${username}`);
+  }
+
+  // Set nickname - routes through Velocity/MC Control to backends
+  async setNicknameOnAllServers(username: string, nickname: string): Promise<{ success: boolean; response?: string; error?: string }> {
+    try {
+      const response = await this.executeCommand(`styled-nicknames set ${username} ${nickname}`);
+      return { success: response.success, response: response.response };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  // Clear nickname
+  async clearNicknameOnAllServers(username: string): Promise<{ success: boolean; response?: string; error?: string }> {
+    try {
+      const response = await this.executeCommand(`styled-nicknames clear ${username}`);
+      return { success: response.success, response: response.response };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  // Server announcements - broadcast message to all players
+  async broadcastAnnouncement(message: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`alert ${message}`);
+  }
+
+  // Send formatted announcement with MiniMessage styling
+  async broadcastFormattedAnnouncement(message: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`broadcast ${message}`);
   }
 }
 
