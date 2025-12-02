@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { mcControl } from "@/lib/mc-control";
+import { frontierRcon } from "@/lib/rcon";
 
 // GET - Get current nickname
 export async function GET() {
@@ -99,12 +99,12 @@ export async function POST(request: Request) {
       data: { nickname: trimmedNickname },
     });
 
-    // Update in game
+    // Update in game via RCON to Frontier server
     try {
-      await mcControl.setPlayerNickname(user.minecraftLink.mcUsername, trimmedNickname);
+      await frontierRcon.setNickname(user.minecraftLink.mcUsername, trimmedNickname);
     } catch (e) {
       console.error("Failed to set nickname in game:", e);
-      // Don't fail the request - DB is updated, game command might fail if player is offline
+      // Don't fail the request - DB is updated, game command might fail if server is down
     }
 
     return NextResponse.json({
@@ -144,9 +144,9 @@ export async function DELETE() {
       data: { nickname: null },
     });
 
-    // Update in game
+    // Update in game via RCON to Frontier server
     try {
-      await mcControl.clearPlayerNickname(user.minecraftLink.mcUsername);
+      await frontierRcon.clearNickname(user.minecraftLink.mcUsername);
     } catch (e) {
       console.error("Failed to clear nickname in game:", e);
     }
