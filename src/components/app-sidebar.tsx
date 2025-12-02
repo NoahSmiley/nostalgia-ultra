@@ -18,7 +18,8 @@ import {
   Users,
   Key,
   Ticket,
-  Settings
+  Settings,
+  Megaphone
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ const adminItems = [
   { title: "Invite Codes", href: "/dashboard/admin/invites", icon: Key },
   { title: "Vouchers", href: "/dashboard/admin/vouchers", icon: Ticket },
   { title: "Server Updates", href: "/dashboard/admin/updates", icon: Settings },
+  { title: "Announce", href: "/dashboard/admin/announce", icon: Megaphone },
 ];
 
 export function AppSidebar() {

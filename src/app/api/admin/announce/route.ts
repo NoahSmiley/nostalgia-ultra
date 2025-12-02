@@ -1,25 +1,18 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import { mcControl } from "@/lib/mc-control";
-
-// Admin emails that can send announcements
-const ADMIN_EMAILS = [
-  "lucidthedev@outlook.com",
-  // Add more admin emails as needed
-];
 
 // POST - Send announcement to all players in-game
 export async function POST(request: Request) {
   try {
     const session = await auth();
 
-    if (!session?.user?.id || !session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
-    if (!ADMIN_EMAILS.includes(session.user.email)) {
+    if (!session.user.isAdmin) {
       return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
@@ -38,21 +31,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send announcement via MC Control
+    // Send announcement via MC Control to all backend servers
     try {
-      let result;
-      if (type === "formatted") {
-        // Allow MiniMessage formatting
-        result = await mcControl.broadcastFormattedAnnouncement(trimmedMessage);
-      } else {
-        // Simple alert message
-        result = await mcControl.broadcastAnnouncement(trimmedMessage);
-      }
+      const command = type === "formatted"
+        ? `broadcast ${trimmedMessage}`
+        : `say [Announcement] ${trimmedMessage}`;
+
+      const result = await mcControl.executeOnAllBackends(command);
+
+      // Also send via Velocity for proxy-wide reach
+      await mcControl.executeCommand(`alert ${trimmedMessage}`).catch(() => {
+        // Ignore if Velocity alert fails - backends got the message
+      });
 
       return NextResponse.json({
         success: true,
         message: "Announcement sent successfully",
-        response: result.response,
+        results: result.results,
       });
     } catch (e) {
       console.error("Failed to send announcement:", e);
