@@ -45,6 +45,7 @@ const serverNavItems = [
 // Admin items
 const adminNavItems = [
   { title: "Players", href: "/dashboard/admin/players" },
+  { title: "Announcements", href: "/dashboard/admin/announce" },
   { title: "Server Updates", href: "/dashboard/admin/updates" },
   { title: "Invites", href: "/dashboard/admin/invites" },
   { title: "Vouchers", href: "/dashboard/admin/vouchers" },
