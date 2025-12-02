@@ -37,6 +37,7 @@ export async function GET() {
       username: minecraftAccount.mcUsername,
       uuid: minecraftAccount.mcUuid,
       linkedAt: minecraftAccount.linkedAt,
+      nickname: minecraftAccount.nickname,
       whitelisted: minecraftAccount.user.subscriptions.length > 0,
     });
   } catch (error) {

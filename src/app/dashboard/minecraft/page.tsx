@@ -6,9 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, XCircle, Loader2, Gamepad2, Info, Link2, Unlink, ArrowRight } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Gamepad2, Info, Link2, Unlink, ArrowRight, Crown, Pencil, X, Check } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+
+interface SubscriptionData {
+  tier: string;
+  status: string;
+}
 
 export default function MinecraftLinkPage() {
   const { data: session, status, update } = useSession();
@@ -18,6 +23,11 @@ export default function MinecraftLinkPage() {
   const [success, setSuccess] = useState(false);
   const [mcAccount, setMcAccount] = useState<any>(null);
   const [loadingAccount, setLoadingAccount] = useState(true);
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nicknameValue, setNicknameValue] = useState("");
+  const [savingNickname, setSavingNickname] = useState(false);
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -27,7 +37,24 @@ export default function MinecraftLinkPage() {
     } else {
       setLoadingAccount(false);
     }
+
+    // Fetch subscription data
+    fetchSubscription();
   }, [session, status]);
+
+  const fetchSubscription = async () => {
+    try {
+      const res = await fetch("/api/subscription");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.subscription) {
+          setSubscription(data.subscription);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch subscription:", err);
+    }
+  };
 
   const fetchMinecraftAccount = async () => {
     try {
@@ -97,6 +124,58 @@ export default function MinecraftLinkPage() {
     }
   };
 
+  const saveNickname = async () => {
+    if (!nicknameValue.trim()) {
+      setNicknameError("Please enter a nickname");
+      return;
+    }
+
+    setSavingNickname(true);
+    setNicknameError(null);
+
+    try {
+      const res = await fetch("/api/minecraft/nickname", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname: nicknameValue.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMcAccount({ ...mcAccount, nickname: data.nickname });
+        setEditingNickname(false);
+      } else {
+        setNicknameError(data.error || "Failed to set nickname");
+      }
+    } catch (err) {
+      setNicknameError("Failed to set nickname");
+    } finally {
+      setSavingNickname(false);
+    }
+  };
+
+  const clearNickname = async () => {
+    setSavingNickname(true);
+
+    try {
+      const res = await fetch("/api/minecraft/nickname", {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setMcAccount({ ...mcAccount, nickname: null });
+        setNicknameValue("");
+      }
+    } catch (err) {
+      setNicknameError("Failed to clear nickname");
+    } finally {
+      setSavingNickname(false);
+    }
+  };
+
+  const isUltra = subscription?.tier === "ultra";
+
   // Loading State - Skeleton
   if (status === "loading" || loadingAccount) {
     return (
@@ -147,7 +226,7 @@ export default function MinecraftLinkPage() {
             <span className="text-muted-foreground">Minecraft Username</span>
             <span className="text-2xl font-mono font-semibold text-foreground">{mcAccount.username}</span>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-6">
             <span className="text-muted-foreground">Server Access</span>
             {mcAccount.whitelisted ? (
               <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Whitelisted</Badge>
@@ -155,7 +234,116 @@ export default function MinecraftLinkPage() {
               <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">Subscription Required</Badge>
             )}
           </div>
+          {subscription && (
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Subscription</span>
+              <Badge className={subscription.tier === "ultra" ? "bg-purple-500/10 text-purple-500 border-purple-500/20" : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"}>
+                {subscription.tier === "ultra" && <Crown className="h-3 w-3 mr-1" />}
+                {subscription.tier.charAt(0).toUpperCase() + subscription.tier.slice(1)}
+              </Badge>
+            </div>
+          )}
         </div>
+
+        {/* Nickname Card - Ultra Only */}
+        {isUltra && (
+          <div className="max-w-xl rounded-2xl border border-purple-500/20 bg-purple-500/5 p-8 mb-10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
+                <Crown className="h-5 w-5 text-purple-500" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Ultra Perk: Custom Nickname</h3>
+                <p className="text-sm text-muted-foreground">Set a custom display name shown in-game</p>
+              </div>
+            </div>
+
+            {nicknameError && (
+              <div className="mb-4 p-3 rounded-lg border border-red-500/20 bg-red-500/10 flex gap-2 text-sm">
+                <XCircle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+                <span className="text-red-200">{nicknameError}</span>
+              </div>
+            )}
+
+            {editingNickname ? (
+              <div className="flex gap-3">
+                <Input
+                  value={nicknameValue}
+                  onChange={(e) => setNicknameValue(e.target.value)}
+                  placeholder="Enter your nickname"
+                  className="flex-1"
+                  maxLength={32}
+                  onKeyDown={(e) => e.key === "Enter" && saveNickname()}
+                  autoFocus
+                />
+                <Button onClick={saveNickname} disabled={savingNickname}>
+                  {savingNickname ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Check className="h-4 w-4" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setEditingNickname(false);
+                    setNicknameValue(mcAccount.nickname || "");
+                    setNicknameError(null);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div>
+                  {mcAccount.nickname ? (
+                    <span className="text-lg font-medium text-foreground">&quot;{mcAccount.nickname}&quot;</span>
+                  ) : (
+                    <span className="text-muted-foreground italic">No nickname set</span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditingNickname(true);
+                      setNicknameValue(mcAccount.nickname || "");
+                    }}
+                  >
+                    <Pencil className="h-4 w-4 mr-2" />
+                    {mcAccount.nickname ? "Edit" : "Set Nickname"}
+                  </Button>
+                  {mcAccount.nickname && (
+                    <Button variant="ghost" onClick={clearNickname} disabled={savingNickname}>
+                      {savingNickname ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Ultra CTA for non-Ultra users */}
+        {subscription?.tier === "member" && (
+          <Link href="/dashboard/subscription" className="block max-w-xl mb-10">
+            <div className="rounded-xl border border-purple-500/20 hover:border-purple-500/40 bg-purple-500/5 hover:bg-purple-500/10 transition-all p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Crown className="h-5 w-5 text-purple-500" />
+                  <div>
+                    <h3 className="font-medium text-foreground mb-1">Upgrade to Ultra</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Get custom nicknames and more exclusive perks!
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-purple-500" />
+              </div>
+            </div>
+          </Link>
+        )}
 
         {/* Subscription CTA if not whitelisted */}
         {!mcAccount.whitelisted && (

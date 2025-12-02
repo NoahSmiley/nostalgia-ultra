@@ -5,14 +5,14 @@ const prisma = new PrismaClient();
 async function main() {
   const update = await prisma.serverUpdate.create({
     data: {
-      title: "New Mods & Features Added!",
-      description: "Fresh Animations, Dynmap live maps, and more quality-of-life improvements.",
+      title: "December Server Update",
+      description: "New mods and gameplay improvements for the holiday season",
       changes: [
-        "Fresh Animations - Enhanced mob animations",
-        "Fresh Animations Extensions - Additional animation packs",
-        "Hold My Items - Visual item holding improvements",
-        "Dynmap - Live server maps for all worlds",
-        "Clear Glass - Cleaner glass textures (Ultra)",
+        "Added Moving Elevators - Create functional elevators with blocks",
+        "Added Diagonal Fences - Fences now connect diagonally for better builds",
+        "Added Hunger Tweaks - Reduced hunger drain rate for better gameplay",
+        "Spawn server now uses Adventure mode to protect the hub",
+        "Removed Effective mod (caused shader compatibility issues)",
       ],
       isHighlight: true,
     },

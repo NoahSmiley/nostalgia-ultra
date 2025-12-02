@@ -49,6 +49,7 @@ model MinecraftAccount {
   userId     String   @unique
   mcUuid     String   @unique
   mcUsername String
+  nickname   String?  // Custom nickname for Ultra members
   linkedAt   DateTime @default(now())
 }
 

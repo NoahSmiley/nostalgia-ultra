@@ -11,6 +11,24 @@ interface WhitelistStatusResponse {
   message: string;
 }
 
+interface WhitelistListResponse {
+  success: boolean;
+  enabled: boolean;
+  players: string[];
+}
+
+interface OnlinePlayer {
+  username: string;
+  uuid: string;
+  server?: string;
+  ping: number;
+}
+
+interface OnlinePlayersResponse {
+  success: boolean;
+  players: OnlinePlayer[];
+}
+
 export class McControlClient {
   private baseUrl: string;
   private apiSecret: string;
@@ -57,7 +75,7 @@ export class McControlClient {
   }
 
   async executeCommand(command: string): Promise<{ success: boolean; response: string }> {
-    return this.request('/rcon/execute', {
+    return this.request('/command/execute', {
       method: 'POST',
       body: JSON.stringify({ command }),
     });
@@ -96,6 +114,36 @@ export class McControlClient {
 
   async getServerStatus(): Promise<ServerStatus> {
     return this.request<ServerStatus>('/server/status');
+  }
+
+  async getWhitelistList(): Promise<WhitelistListResponse> {
+    return this.request<WhitelistListResponse>('/whitelist/list');
+  }
+
+  async getOnlinePlayers(): Promise<OnlinePlayersResponse> {
+    return this.request<OnlinePlayersResponse>('/server/players');
+  }
+
+  async kickPlayer(username: string, reason?: string): Promise<{ success: boolean; message: string }> {
+    return this.request('/player/kick', {
+      method: 'POST',
+      body: JSON.stringify({ username, reason }),
+    });
+  }
+
+  async setWhitelistEnabled(enabled: boolean): Promise<{ success: boolean; message: string }> {
+    return this.request(enabled ? '/whitelist/enable' : '/whitelist/disable', {
+      method: 'POST',
+    });
+  }
+
+  // Nickname management (styled-nicknames mod)
+  async setPlayerNickname(username: string, nickname: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`nick set ${username} ${nickname}`);
+  }
+
+  async clearPlayerNickname(username: string): Promise<{ success: boolean; response: string }> {
+    return this.executeCommand(`nick clear ${username}`);
   }
 }
 
