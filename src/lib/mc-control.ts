@@ -144,11 +144,14 @@ export class McControlClient {
     return this.executeCommand(`styled-nicknames clear ${username}`);
   }
 
-  // Set nickname - routes through Velocity/MC Control to backends
-  async setNicknameOnAllServers(username: string, nickname: string): Promise<{ success: boolean; response?: string; error?: string }> {
+  // Execute command on all backend Fabric servers via RCON
+  async executeOnAllBackends(command: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
     try {
-      const response = await this.executeCommand(`styled-nicknames set ${username} ${nickname}`);
-      return { success: response.success, response: response.response };
+      const response = await this.request<{ success: boolean; results: Record<string, { success: boolean; response: string }> }>('/backend/execute-all', {
+        method: 'POST',
+        body: JSON.stringify({ command }),
+      });
+      return { success: response.success, results: response.results };
     } catch (error) {
       return {
         success: false,
@@ -157,17 +160,14 @@ export class McControlClient {
     }
   }
 
-  // Clear nickname
-  async clearNicknameOnAllServers(username: string): Promise<{ success: boolean; response?: string; error?: string }> {
-    try {
-      const response = await this.executeCommand(`styled-nicknames clear ${username}`);
-      return { success: response.success, response: response.response };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
-    }
+  // Set nickname on all backend servers via RCON
+  async setNicknameOnAllServers(username: string, nickname: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.executeOnAllBackends(`styled-nicknames set ${username} ${nickname}`);
+  }
+
+  // Clear nickname on all backend servers
+  async clearNicknameOnAllServers(username: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.executeOnAllBackends(`styled-nicknames clear ${username}`);
   }
 
   // Server announcements - broadcast message to all players
