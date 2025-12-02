@@ -145,11 +145,6 @@
     "modrinthId": "rUgZvGzi"
   },
   {
-    "name": "Effective",
-    "side": "client",
-    "modrinthId": "pcPXJeZi"
-  },
-  {
     "name": "Elytra Slot",
     "side": "both",
     "modrinthId": "mSQF1NpT"
@@ -208,6 +203,11 @@
     "name": "Harvest",
     "side": "server",
     "modrinthId": "1DgT4iww"
+  },
+  {
+    "name": "Hunger Tweaks",
+    "side": "both",
+    "modrinthId": "2ygSk5sW"
   },
   {
     "name": "ImmediatelyFast",
@@ -278,6 +278,11 @@
     "name": "Mouse Tweaks",
     "side": "client",
     "modrinthId": "aC3cM3Vq"
+  },
+  {
+    "name": "Moving Elevators",
+    "side": "both",
+    "modrinthId": "9KZOe6HD"
   },
   {
     "name": "Nature's Compass",
@@ -390,6 +395,16 @@
     "modrinthId": "4q8UOK1d"
   },
   {
+    "name": "SuperMartijn642's Config Lib",
+    "side": "both",
+    "modrinthId": "LN9BxssP"
+  },
+  {
+    "name": "SuperMartijn642's Core Lib",
+    "side": "both",
+    "modrinthId": "rOUBggPv"
+  },
+  {
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
@@ -413,11 +428,6 @@
     "name": "TxniLib",
     "side": "both",
     "modrinthId": "vBbPDuOs"
-  },
-  {
-    "name": "Visuality",
-    "side": "client",
-    "modrinthId": "rI0hvYcd"
   },
   {
     "name": "Wakes",
