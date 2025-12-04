@@ -155,6 +155,11 @@
     "modrinthId": "nxCjKP6D"
   },
   {
+    "name": "ImproperUI",
+    "side": "client",
+    "modrinthId": "rizRiwPL"
+  },
+  {
     "name": "ItemSwapper",
     "side": "client",
     "modrinthId": "RPOSBQgq"
