@@ -60,6 +60,11 @@
     "modrinthId": "m0oRwcZx"
   },
   {
+    "name": "Camera Utils",
+    "side": "client",
+    "modrinthId": "bnRsouav"
+  },
+  {
     "name": "Capes",
     "side": "client",
     "modrinthId": "89Wsn8GD"
@@ -210,6 +215,11 @@
     "modrinthId": "2ygSk5sW"
   },
   {
+    "name": "Immersive Hotbar",
+    "side": "client",
+    "modrinthId": "nxCjKP6D"
+  },
+  {
     "name": "ImmediatelyFast",
     "side": "client",
     "modrinthId": "5ZwdcRci"
@@ -223,6 +233,11 @@
     "name": "Iris Shaders",
     "side": "client",
     "modrinthId": "YL57xq9U"
+  },
+  {
+    "name": "ItemSwapper",
+    "side": "client",
+    "modrinthId": "RPOSBQgq"
   },
   {
     "name": "Just Enough Items (JEI)",
@@ -345,6 +360,11 @@
     "modrinthId": "QAGBst4M"
   },
   {
+    "name": "Raised",
+    "side": "client",
+    "modrinthId": "nCQRBEiR"
+  },
+  {
     "name": "Ranged Weapon API",
     "side": "both",
     "modrinthId": "AqaIIO6D"
@@ -358,6 +378,11 @@
     "name": "Realistic Bees",
     "side": "both",
     "modrinthId": "tG6HkcWx"
+  },
+  {
+    "name": "Resourcify",
+    "side": "client",
+    "modrinthId": "RLzHAoZe"
   },
   {
     "name": "Shoulder Surfing Reloaded",
@@ -375,6 +400,11 @@
     "modrinthId": "9eGKb6K1"
   },
   {
+    "name": "Smooth Scrolling",
+    "side": "client",
+    "modrinthId": "ooLePm2K"
+  },
+  {
     "name": "Sodium",
     "side": "client",
     "modrinthId": "AANobbMI"
@@ -388,6 +418,11 @@
     "name": "Sound Physics Remastered",
     "side": "both",
     "modrinthId": "qyVF9oeo"
+  },
+  {
+    "name": "Sounds",
+    "side": "client",
+    "modrinthId": "ZouiUX7t"
   },
   {
     "name": "Subtle Effects",
@@ -408,6 +443,11 @@
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
+  },
+  {
+    "name": "Tiny Item Animations",
+    "side": "client",
+    "modrinthId": "wMkevcSR"
   },
   {
     "name": "Text Placeholder API",

@@ -40,6 +40,11 @@
     "modrinthId": "uy4Cnpcm"
   },
   {
+    "name": "Camera Utils",
+    "side": "client",
+    "modrinthId": "bnRsouav"
+  },
+  {
     "name": "Chat Heads",
     "side": "client",
     "modrinthId": "Wb5oqrBJ"
@@ -145,6 +150,16 @@
     "modrinthId": "1DgT4iww"
   },
   {
+    "name": "Immersive Hotbar",
+    "side": "client",
+    "modrinthId": "nxCjKP6D"
+  },
+  {
+    "name": "ItemSwapper",
+    "side": "client",
+    "modrinthId": "RPOSBQgq"
+  },
+  {
     "name": "Just Enough Items (JEI)",
     "side": "both",
     "modrinthId": "u6dRKJwZ"
@@ -230,6 +245,11 @@
     "modrinthId": "QAGBst4M"
   },
   {
+    "name": "Raised",
+    "side": "client",
+    "modrinthId": "nCQRBEiR"
+  },
+  {
     "name": "Ranged Weapon API",
     "side": "both",
     "modrinthId": "AqaIIO6D"
@@ -238,6 +258,11 @@
     "name": "Realistic Bees",
     "side": "both",
     "modrinthId": "tG6HkcWx"
+  },
+  {
+    "name": "Resourcify",
+    "side": "client",
+    "modrinthId": "RLzHAoZe"
   },
   {
     "name": "Shulker Box Tooltip",
@@ -250,6 +275,11 @@
     "modrinthId": "9eGKb6K1"
   },
   {
+    "name": "Smooth Scrolling",
+    "side": "client",
+    "modrinthId": "ooLePm2K"
+  },
+  {
     "name": "Sodium Dynamic Lights",
     "side": "client",
     "modrinthId": "PxQSWIcD"
@@ -260,9 +290,19 @@
     "modrinthId": "qyVF9oeo"
   },
   {
+    "name": "Sounds",
+    "side": "client",
+    "modrinthId": "ZouiUX7t"
+  },
+  {
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
+  },
+  {
+    "name": "Tiny Item Animations",
+    "side": "client",
+    "modrinthId": "wMkevcSR"
   },
   {
     "name": "Toni's Immersive Lanterns",
