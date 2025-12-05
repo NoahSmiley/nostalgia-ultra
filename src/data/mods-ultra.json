@@ -65,6 +65,11 @@
     "modrinthId": "89Wsn8GD"
   },
   {
+    "name": "Carry On",
+    "side": "both",
+    "modrinthId": "joEfVgkn"
+  },
+  {
     "name": "Chat Heads",
     "side": "client",
     "modrinthId": "Wb5oqrBJ"
@@ -265,6 +270,11 @@
     "modrinthId": "oX6SohLj"
   },
   {
+    "name": "Mine Glass Without Silk Touch",
+    "side": "both",
+    "modrinthId": "49ume2sb"
+  },
+  {
     "name": "Mod Menu",
     "side": "client",
     "modrinthId": "mOgUt4GM"
@@ -303,6 +313,11 @@
     "name": "Nature's Compass",
     "side": "both",
     "modrinthId": "fPetb5Kh"
+  },
+  {
+    "name": "NiftyCarts",
+    "side": "both",
+    "modrinthId": "CXd6g9xp"
   },
   {
     "name": "Not Enough Animations",

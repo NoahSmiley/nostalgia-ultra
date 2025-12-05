@@ -40,6 +40,11 @@
     "modrinthId": "uy4Cnpcm"
   },
   {
+    "name": "Carry On",
+    "side": "both",
+    "modrinthId": "joEfVgkn"
+  },
+  {
     "name": "Chat Heads",
     "side": "client",
     "modrinthId": "Wb5oqrBJ"
@@ -185,6 +190,11 @@
     "modrinthId": "QdG47OkI"
   },
   {
+    "name": "Mine Glass Without Silk Touch",
+    "side": "both",
+    "modrinthId": "49ume2sb"
+  },
+  {
     "name": "ModernFix",
     "side": "both",
     "modrinthId": "nmDcB62a"
@@ -208,6 +218,11 @@
     "name": "Nature's Compass",
     "side": "both",
     "modrinthId": "fPetb5Kh"
+  },
+  {
+    "name": "NiftyCarts",
+    "side": "both",
+    "modrinthId": "CXd6g9xp"
   },
   {
     "name": "Nyf's Spiders",
