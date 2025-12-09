@@ -15,7 +15,6 @@
     "modrinthId": "jtmvUHXj"
   },
   {
-  {
     "name": "Analog",
     "side": "server",
     "modrinthId": "OpqpD8K2"
@@ -119,6 +118,11 @@
     "name": "Crawl",
     "side": "both",
     "modrinthId": "H1JOVjhn"
+  },
+  {
+    "name": "CustomNPCs-Unofficial",
+    "side": "both",
+    "modrinthId": "vFAmwl6B"
   },
   {
     "name": "Diagonal Fences",
