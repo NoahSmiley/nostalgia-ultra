@@ -29,11 +29,8 @@ export function LandingHero() {
               alt="Minecraft"
               className="w-48 h-48 object-contain"
             />
-            <h1 id="hero-heading" className="flex items-baseline gap-3 justify-center">
-              <span className="text-5xl md:text-6xl font-normal text-white tracking-tighter">nostalgia</span>
-              <span className="font-[family-name:var(--font-minecraft)] text-2xl md:text-3xl text-white">
-                ULTRA
-              </span>
+            <h1 id="hero-heading" className="font-[family-name:var(--font-minecraft)] text-5xl md:text-6xl text-white">
+              Endless
             </h1>
           </div>
 

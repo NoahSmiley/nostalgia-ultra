@@ -54,7 +54,7 @@ async function enrichModsWithModrinth(
       {
         cache: 'no-store',
         headers: {
-          'User-Agent': 'NostalgiaUltra/1.0 (website mod list)'
+          'User-Agent': 'Endless/1.0 (website mod list)'
         }
       }
     );

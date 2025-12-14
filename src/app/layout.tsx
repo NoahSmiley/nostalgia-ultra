@@ -26,7 +26,7 @@ const minecraft = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "Nostalgia Ultra | Minecraft Server",
+  title: "Endless | Minecraft Server",
   description: "A cozy Minecraft server for endless adventure",
 };
 

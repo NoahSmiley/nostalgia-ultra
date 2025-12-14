@@ -12,13 +12,10 @@ export const Logo: React.FC<LogoProps> = ({
   showText = true,
 }) => {
   return (
-    <div className={`flex items-baseline gap-1 ${className}`}>
-      <span className="text-xl font-normal text-white tracking-tighter">nostalgia</span>
-      {showText && (
-        <span className="font-[family-name:var(--font-minecraft)] text-xs text-white">
-          ULTRA
-        </span>
-      )}
+    <div className={`flex items-baseline ${className}`}>
+      <span className="font-[family-name:var(--font-minecraft)] text-xl text-white">
+        Endless
+      </span>
     </div>
   );
 };

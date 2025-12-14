@@ -145,7 +145,7 @@ export default function AdminAnnouncePage() {
     { label: "Restart 5min", message: "Server restart in 5 minutes! Please find a safe place to log out.", style: "important" as const },
     { label: "Restart 10min", message: "Server restart in 10 minutes. Save your progress!", style: "standard" as const },
     { label: "Maintenance", message: "Server going down for maintenance. Back online shortly!", style: "important" as const },
-    { label: "Welcome", message: "Welcome to Nostalgia Ultra! Enjoy your stay.", style: "standard" as const },
+    { label: "Welcome", message: "Welcome to Endless! Enjoy your stay.", style: "standard" as const },
     { label: "New Update", message: "A new update has been deployed! Check out the changelog.", style: "update" as const },
     { label: "Event Starting", message: "A special event is starting now! Join in on the fun.", style: "event" as const },
   ];

@@ -66,7 +66,7 @@ export default function LandingPage() {
         </div>
         <h1 className="text-h1 mb-8">
           <span className="text-[0.7em]">Your adventure awaits on</span><br />
-          <span className="inline-flex items-baseline gap-2"><span className="tracking-tighter">nostalgia</span><span className="font-[family-name:var(--font-minecraft)] text-[0.6em]">ULTRA</span></span>
+          <span className="font-[family-name:var(--font-minecraft)]">Endless</span>
         </h1>
         <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
           A private, invite-only Minecraft server for friends. No lost worlds, no setup hassle,
@@ -83,7 +83,7 @@ export default function LandingPage() {
 
       {/* Two Feature Cards */}
       <div className="grid md:grid-cols-2 gap-6 mb-20">
-        {/* What is Nostalgia Ultra Card */}
+        {/* What is Endless Card */}
         <div className="rounded-2xl border border-border bg-card p-8">
           <h2 className="text-xl font-semibold text-foreground mb-3">What is this?</h2>
           <p className="text-muted-foreground mb-6">

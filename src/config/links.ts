@@ -19,7 +19,7 @@ export const LINKS = {
 
 // Brand/Site Info
 export const SITE_CONFIG = {
-  name: 'Nostalgia Ultra',
+  name: 'Endless',
   tagline: 'A premium Minecraft community experience',
-  description: 'Join the Nostalgia Ultra Minecraft server - a carefully curated modded survival experience.',
+  description: 'Join the Endless Minecraft server - a carefully curated modded survival experience.',
 } as const;
