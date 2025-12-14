@@ -29,7 +29,7 @@ let cacheTimestamp = 0;
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 async function enrichModsWithModrinth(
-  mods: { name: string; side: string; modrinthId?: string }[],
+  mods: { name: string; side: string; modrinthId?: string | null }[],
   ultraOnly: boolean = false
 ): Promise<ModInfo[]> {
   const modrinthIds = mods.filter(m => m.modrinthId).map(m => m.modrinthId);
