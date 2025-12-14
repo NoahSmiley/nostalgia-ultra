@@ -45,9 +45,9 @@
     "modrinthId": "4mrLpva5"
   },
   {
-    "name": "Canary",
+    "name": "Radium",
     "side": "both",
-    "modrinthId": "qa1j1zYR"
+    "modrinthId": "2gvRmQXx"
   },
   {
     "name": "Carry On",
@@ -148,11 +148,6 @@
     "name": "EMI",
     "side": "both",
     "modrinthId": "fRiHVvU7"
-  },
-  {
-    "name": "Fakename",
-    "side": "server",
-    "modrinthId": null
   },
   {
     "name": "Falling Tree",
