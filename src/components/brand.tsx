@@ -5,7 +5,7 @@ interface BrandProps {
 export function Brand({ className = "" }: BrandProps) {
   return (
     <span className={`font-semibold ${className}`}>
-      Endless
+      endless
     </span>
   );
 }

@@ -14,7 +14,7 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <div className={`flex items-baseline ${className}`}>
       <span className="text-xl font-semibold text-white">
-        Endless
+        endless
       </span>
     </div>
   );

@@ -30,7 +30,7 @@ export function LandingHero() {
               className="w-48 h-48 object-contain"
             />
             <h1 id="hero-heading" className="text-5xl md:text-6xl font-semibold text-white">
-              Endless
+              endless
             </h1>
           </div>
 
