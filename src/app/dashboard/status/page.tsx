@@ -21,7 +21,7 @@ interface ServerStatus {
   config: {
     ip: string;
     mcVersion: string;
-    fabricVersion: string;
+    forgeVersion: string;
     maxPlayers: number;
     restartTime: string;
   };
@@ -60,7 +60,7 @@ export default function StatusPage() {
   const tps = status?.tps ?? 20.0;
   const serverIp = status?.config?.ip ?? SERVER_CONFIG.ip;
   const mcVersion = status?.config?.mcVersion ?? SERVER_CONFIG.mcVersion;
-  const fabricVersion = status?.config?.fabricVersion ?? SERVER_CONFIG.fabricVersion;
+  const forgeVersion = status?.config?.forgeVersion ?? SERVER_CONFIG.forgeVersion;
   const maxPlayers = status?.config?.maxPlayers ?? SERVER_CONFIG.maxPlayers;
   const restartTime = status?.config?.restartTime ?? SERVER_CONFIG.fullRestartTime;
 
@@ -134,7 +134,7 @@ export default function StatusPage() {
           </div>
           <div className="flex justify-between p-5">
             <span className="text-muted-foreground">Mod Loader</span>
-            <span className="text-foreground">Fabric {fabricVersion}</span>
+            <span className="text-foreground">Forge {forgeVersion}</span>
           </div>
           <div className="flex justify-between p-5">
             <span className="text-muted-foreground">Player Slots</span>
