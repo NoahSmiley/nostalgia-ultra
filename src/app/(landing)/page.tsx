@@ -124,7 +124,7 @@ export default function LandingPage() {
             </li>
             <li className="flex items-start gap-3">
               <span className="text-muted-foreground">•</span>
-              <span className="text-muted-foreground">50+ carefully selected mods that work together</span>
+              <span className="text-muted-foreground">125+ carefully selected mods that work together</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-muted-foreground">•</span>
@@ -173,7 +173,7 @@ export default function LandingPage() {
               <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse" />
               <span className="text-green-500 font-medium">Online</span>
             </span>
-            <span className="text-muted-foreground">Version 1.21.1</span>
+            <span className="text-muted-foreground">Version 1.20.1</span>
             <span className="text-muted-foreground hidden sm:inline">•</span>
             <span className="text-muted-foreground hidden sm:inline">Modded</span>
           </div>

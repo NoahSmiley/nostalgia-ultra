@@ -16,7 +16,7 @@ const plans = [
       "Server whitelist access",
       "Play with the community",
       "Access to live Dynmap",
-      "50+ curated mods included",
+      "125+ curated mods included",
     ],
     highlighted: false,
     buttonText: "Get Standard",

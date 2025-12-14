@@ -100,7 +100,7 @@ export default function FeaturesPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 mb-4">
               <Sparkles className="h-6 w-6 text-purple-500" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">50+ Custom Mods</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">125+ Custom Mods</h3>
             <p className="text-muted-foreground">
               Our carefully curated modpack includes Create for automation, Farmers Delight for cooking,
               new biomes, and much more.

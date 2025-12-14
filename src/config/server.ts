@@ -5,22 +5,22 @@
 
 export const SERVER_CONFIG = {
   // Server Connection (public-facing address for players)
-  ip: process.env.NEXT_PUBLIC_SERVER_IP || 'n1429.pufferfish.host:19132',
-  port: 19132,
+  ip: process.env.NEXT_PUBLIC_SERVER_IP || 'n1429.pufferfish.host:25565',
+  port: 25565,
 
   // Actual server host for status queries (backend only)
   statusHost: process.env.MC_STATUS_HOST || 'n1429.pufferfish.host',
-  statusPort: parseInt(process.env.MC_STATUS_PORT || '19132'),
+  statusPort: parseInt(process.env.MC_STATUS_PORT || '25565'),
 
   // Minecraft & Mod Loader Versions
-  mcVersion: process.env.NEXT_PUBLIC_MC_VERSION || '1.21.1',
-  fabricVersion: process.env.NEXT_PUBLIC_FABRIC_VERSION || '0.18.1',
+  mcVersion: process.env.NEXT_PUBLIC_MC_VERSION || '1.20.1',
+  forgeVersion: process.env.NEXT_PUBLIC_FORGE_VERSION || '47.3.0',
 
   // Modpack - hosted via GitHub Pages (direct download link for Prism Launcher import)
   modpackUrl: process.env.NEXT_PUBLIC_MODPACK_URL || 'https://noahsmiley.github.io/noahs-server-modpack/Noahs-Server.mrpack',
   modpackUrlUltra: 'https://noahsmiley.github.io/noahs-server-modpack-ultra/Noahs-Server-Ultra.mrpack',
-  modCount: 40,
-  modCountUltra: 74,
+  modCount: 125,
+  modCountUltra: 125,
 
   // Server Settings
   maxPlayers: 20,
@@ -37,8 +37,8 @@ export const SERVER_CONFIG = {
   get mcVersionDisplay() {
     return `Minecraft ${this.mcVersion}`;
   },
-  get fabricVersionDisplay() {
-    return `Fabric ${this.fabricVersion}`;
+  get forgeVersionDisplay() {
+    return `Forge ${this.forgeVersion}`;
   },
   get modCountDisplay() {
     return `${this.modCount}+`;

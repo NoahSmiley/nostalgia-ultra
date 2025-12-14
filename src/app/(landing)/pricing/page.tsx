@@ -107,7 +107,7 @@ export default function PricingPage() {
               {[
                 "Full server access",
                 "Access to all worlds & dimensions",
-                "50+ curated mods included",
+                "125+ curated mods included",
                 "Community events participation",
               ].map((feature, i) => (
                 <li key={i} className="flex items-center gap-3">

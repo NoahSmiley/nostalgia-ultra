@@ -96,7 +96,7 @@ export default function AboutPage() {
         <h2 className="text-2xl font-semibold text-foreground mb-8">The Server</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="text-center">
-            <p className="text-4xl font-bold text-foreground mb-2">50+</p>
+            <p className="text-4xl font-bold text-foreground mb-2">125+</p>
             <p className="text-muted-foreground">Curated Mods</p>
           </div>
           <div className="text-center">
@@ -104,7 +104,7 @@ export default function AboutPage() {
             <p className="text-muted-foreground">Always Online</p>
           </div>
           <div className="text-center">
-            <p className="text-4xl font-bold text-foreground mb-2">1.21.1</p>
+            <p className="text-4xl font-bold text-foreground mb-2">1.20.1</p>
             <p className="text-muted-foreground">MC Version</p>
           </div>
           <div className="text-center">

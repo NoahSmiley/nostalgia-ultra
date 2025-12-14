@@ -68,15 +68,17 @@ export async function POST(req: Request) {
       },
     });
 
-    // Automatically whitelist for testing (regardless of subscription)
+    // Only whitelist if user has an active subscription
     let whitelisted = false;
-    try {
-      const whitelistResult = await mcControl.addToWhitelist(mcUsername);
-      console.log(`Auto-whitelisted ${mcUsername} after account linking:`, whitelistResult.message);
-      whitelisted = true;
-    } catch (error) {
-      console.error(`Failed to auto-whitelist ${mcUsername}:`, error);
-      // Don't fail the whole request if whitelist fails
+    if (subscription) {
+      try {
+        const whitelistResult = await mcControl.addToWhitelist(mcUsername);
+        console.log(`Whitelisted ${mcUsername} (active subscription):`, whitelistResult.message);
+        whitelisted = true;
+      } catch (error) {
+        console.error(`Failed to whitelist ${mcUsername}:`, error);
+        // Don't fail the whole request if whitelist fails
+      }
     }
 
     return NextResponse.json({

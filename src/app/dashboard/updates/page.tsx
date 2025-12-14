@@ -168,11 +168,11 @@ export default async function UpdatesPage() {
         <h2 className="text-2xl font-semibold text-foreground mb-8">Current Version</h2>
         <div className="grid sm:grid-cols-3 gap-6">
           <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-3xl font-semibold text-foreground">1.21.1</p>
+            <p className="text-3xl font-semibold text-foreground">1.20.1</p>
             <p className="text-muted-foreground mt-1">Minecraft Version</p>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-3xl font-semibold text-foreground">90+</p>
+            <p className="text-3xl font-semibold text-foreground">125+</p>
             <p className="text-muted-foreground mt-1">Mods Included</p>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
