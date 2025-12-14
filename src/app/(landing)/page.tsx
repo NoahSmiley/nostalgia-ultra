@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronLeft, ChevronRight, Globe, Swords, Paintbrush, Clock } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,28 +18,6 @@ const highlights = [
     Icon: Globe,
     iconColor: "text-green-500/60",
     status: "available",
-  },
-  {
-    name: "The Canvas",
-    label: "Creative",
-    description: "A creative world for building without limits. Design and share your creations.",
-    gradient: "from-cyan-500/30 via-sky-500/15 to-cyan-500/5",
-    borderColor: "border-cyan-500/30",
-    labelColor: "text-cyan-400",
-    Icon: Paintbrush,
-    iconColor: "text-cyan-500/60",
-    status: "coming_soon",
-  },
-  {
-    name: "The Crucible",
-    label: "PvP",
-    description: "Test your skills in competitive PvP battles and events.",
-    gradient: "from-red-500/30 via-orange-500/15 to-red-500/5",
-    borderColor: "border-red-500/30",
-    labelColor: "text-red-400",
-    Icon: Swords,
-    iconColor: "text-red-500/60",
-    status: "coming_soon",
   },
 ];
 

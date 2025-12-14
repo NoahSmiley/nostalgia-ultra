@@ -73,9 +73,4 @@ export const WORLDS = {
     description: 'Our main survival world with custom terrain generation. Build, explore, and thrive.',
     status: 'available' as const,
   },
-  canvas: {
-    name: 'The Canvas',
-    description: 'A creative world for building without limits. Design and share your creations.',
-    status: 'coming_soon' as const,
-  },
 } as const;

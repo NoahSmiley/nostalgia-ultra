@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Sparkles, Shield, Navigation, Globe, Swords, Paintbrush, Clock } from "lucide-react";
+import { Sparkles, Shield, Navigation, Globe } from "lucide-react";
 import { Brand } from "@/components/brand";
 
 export default function FeaturesPage() {
@@ -23,7 +23,7 @@ export default function FeaturesPage() {
           Multiple worlds for different playstyles, with more coming soon
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {/* The Frontier - Main Survival */}
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500/20 via-green-500/10 to-emerald-500/5 border border-green-500/20 p-6 flex flex-col group hover:border-green-500/40 transition-colors min-h-[200px]">
             <div className="absolute top-4 right-4">
@@ -43,46 +43,6 @@ export default function FeaturesPage() {
               </span>
             </div>
           </div>
-
-          {/* The Canvas - Creative */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent border border-cyan-500/20 p-6 flex flex-col group hover:border-cyan-500/40 transition-colors min-h-[200px] opacity-75">
-            <div className="absolute top-4 right-4">
-              <Paintbrush className="h-8 w-8 text-cyan-500/50 group-hover:text-cyan-500/70 transition-colors" />
-            </div>
-            <div className="flex-1">
-              <span className="text-xs font-medium text-cyan-400 uppercase tracking-wider">Creative</span>
-              <h3 className="text-2xl font-bold text-foreground mt-1">The Canvas</h3>
-              <p className="text-muted-foreground mt-2">
-                A creative world for building without limits. Design and share your creations.
-              </p>
-            </div>
-            <div className="mt-4 pt-4 border-t border-cyan-500/20">
-              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                Coming Soon
-              </span>
-            </div>
-          </div>
-
-          {/* The Crucible - PvP */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-500/20 via-orange-500/10 to-transparent border border-red-500/20 p-6 flex flex-col group hover:border-red-500/40 transition-colors min-h-[200px] opacity-75">
-            <div className="absolute top-4 right-4">
-              <Swords className="h-8 w-8 text-red-500/50 group-hover:text-red-500/70 transition-colors" />
-            </div>
-            <div className="flex-1">
-              <span className="text-xs font-medium text-red-400 uppercase tracking-wider">PvP</span>
-              <h3 className="text-2xl font-bold text-foreground mt-1">The Crucible</h3>
-              <p className="text-muted-foreground mt-2">
-                Test your skills in competitive PvP battles and events.
-              </p>
-            </div>
-            <div className="mt-4 pt-4 border-t border-red-500/20">
-              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                Coming Soon
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -96,7 +56,7 @@ export default function FeaturesPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 mb-4">
               <Sparkles className="h-6 w-6 text-purple-500" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">50+ Custom Mods</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">125+ Custom Mods</h3>
             <p className="text-muted-foreground">
               Our carefully curated modpack includes Create for automation, Farmers Delight for cooking,
               new biomes, and much more.
@@ -129,10 +89,10 @@ export default function FeaturesPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 mb-4">
               <Globe className="h-6 w-6 text-blue-500" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Multiple Worlds</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Expansive World</h3>
             <p className="text-muted-foreground">
-              Play in The Frontier survival world now, with The Canvas (creative) and
-              The Crucible (PvP) coming soon.
+              Explore The Frontier, our main survival world with custom terrain generation,
+              unique biomes, and endless possibilities.
             </p>
           </div>
         </div>
