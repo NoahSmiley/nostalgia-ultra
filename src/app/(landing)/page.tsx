@@ -17,7 +17,6 @@ const highlights = [
     labelColor: "text-green-400",
     Icon: Globe,
     iconColor: "text-green-500/60",
-    status: "available",
   },
 ];
 
@@ -196,7 +195,7 @@ export default function LandingPage() {
           {highlights.map((item, i) => (
             <div
               key={i}
-              className={`flex-shrink-0 w-[calc(50%-12px)] min-w-[400px] snap-start relative rounded-2xl overflow-hidden group cursor-pointer bg-gradient-to-br ${item.gradient} border ${item.borderColor} hover:border-opacity-60 transition-colors ${item.status === "coming_soon" ? "opacity-75" : ""}`}
+              className={`flex-shrink-0 w-[calc(50%-12px)] min-w-[400px] snap-start relative rounded-2xl overflow-hidden group cursor-pointer bg-gradient-to-br ${item.gradient} border ${item.borderColor} hover:border-opacity-60 transition-colors`}
             >
               <div className="absolute top-6 right-6">
                 <item.Icon className={`h-12 w-12 ${item.iconColor} group-hover:opacity-80 transition-opacity`} />
@@ -208,17 +207,10 @@ export default function LandingPage() {
                 </span>
                 <h3 className="text-3xl font-sans text-foreground mb-3">{item.name}</h3>
                 <p className="text-muted-foreground mb-4">{item.description}</p>
-                {item.status === "available" ? (
-                  <span className="inline-flex items-center gap-2 text-sm text-green-400">
-                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    Available Now
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    Coming Soon
-                  </span>
-                )}
+                <span className="inline-flex items-center gap-2 text-sm text-green-400">
+                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  Available Now
+                </span>
               </div>
             </div>
           ))}
