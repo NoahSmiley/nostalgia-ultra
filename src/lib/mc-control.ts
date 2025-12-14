@@ -82,7 +82,7 @@ export class McControlClient {
   }
 
   // LuckPerms group management - runs on all backend servers via RCON
-  // Using full "luckperms" command name for Fabric compatibility
+  // Using full "luckperms" command name for Forge compatibility
   async setPlayerGroup(username: string, group: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
     // First remove all role groups (ultra, member, admin) to ensure clean state
     const roleGroups = ['ultra', 'member', 'admin'];
@@ -148,16 +148,17 @@ export class McControlClient {
     });
   }
 
-  // Nickname management (styled-nicknames mod on backend servers)
+  // Nickname management (Endless Nicknames mod on backend Forge servers)
+  // Uses /nickname set <player> <name> - supports color codes with &
   async setPlayerNickname(username: string, nickname: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`styled-nicknames set ${username} ${nickname}`);
+    return this.executeCommand(`nickname set ${username} ${nickname}`);
   }
 
   async clearPlayerNickname(username: string): Promise<{ success: boolean; response: string }> {
-    return this.executeCommand(`styled-nicknames clear ${username}`);
+    return this.executeCommand(`nickname clear ${username}`);
   }
 
-  // Execute command on all backend Fabric servers via RCON
+  // Execute command on all backend Forge servers via RCON
   async executeOnAllBackends(command: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
     try {
       const response = await this.request<{ success: boolean; results: Record<string, { success: boolean; response: string }> }>('/backend/execute-all', {
@@ -173,14 +174,14 @@ export class McControlClient {
     }
   }
 
-  // Set nickname on all backend servers via RCON
+  // Set nickname on all backend servers via RCON (using Endless Nicknames mod)
   async setNicknameOnAllServers(username: string, nickname: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
-    return this.executeOnAllBackends(`styled-nicknames set ${username} ${nickname}`);
+    return this.executeOnAllBackends(`nickname set ${username} ${nickname}`);
   }
 
-  // Clear nickname on all backend servers
+  // Clear nickname on all backend servers (using Endless Nicknames mod)
   async clearNicknameOnAllServers(username: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
-    return this.executeOnAllBackends(`styled-nicknames clear ${username}`);
+    return this.executeOnAllBackends(`nickname clear ${username}`);
   }
 
   // Server announcements - broadcast message to all players

@@ -48,8 +48,8 @@ export const SERVER_CONFIG = {
 // System Requirements
 export const SYSTEM_REQUIREMENTS = {
   java: {
-    version: 21,
-    display: 'Java 21 or later',
+    version: 17,
+    display: 'Java 17 or later',
   },
   ram: {
     minimum: 4, // GB

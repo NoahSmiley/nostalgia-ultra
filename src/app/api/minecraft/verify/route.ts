@@ -3,6 +3,44 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { mcControl } from '@/lib/mc-control';
 
+// Mojang API response type
+interface MojangProfile {
+  id: string;  // UUID without dashes
+  name: string;  // Current username
+}
+
+// Fetch UUID from Mojang API
+async function getMojangProfile(username: string): Promise<MojangProfile | null> {
+  try {
+    const response = await fetch(
+      `https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(username)}`,
+      {
+        headers: {
+          'User-Agent': 'Endless/1.0 (minecraft verification)',
+        },
+      }
+    );
+
+    if (response.status === 404) {
+      return null; // Username doesn't exist
+    }
+
+    if (!response.ok) {
+      throw new Error(`Mojang API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Mojang API error:', error);
+    throw error;
+  }
+}
+
+// Format UUID with dashes (Mojang returns without dashes)
+function formatUuid(uuid: string): string {
+  return `${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20)}`;
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -23,17 +61,27 @@ export async function POST(req: Request) {
       );
     }
 
-    // For demo purposes, we'll use the username directly
-    // In production, you'd verify through prismarine-auth or Mojang API
-    const mcUsername = userCode.trim();
+    const inputUsername = userCode.trim();
 
-    // Generate a UUID for demo (in production, get from Mojang API)
-    const mcUuid = `${mcUsername.toLowerCase()}-uuid-${Date.now()}`;
+    // Verify username exists via Mojang API
+    const mojangProfile = await getMojangProfile(inputUsername);
 
-    // Check if this username is already linked to another user
+    if (!mojangProfile) {
+      return NextResponse.json(
+        { error: 'Minecraft username not found. Please check the spelling and try again.' },
+        { status: 400 }
+      );
+    }
+
+    // Use the official username and UUID from Mojang
+    const mcUsername = mojangProfile.name;
+    const mcUuid = formatUuid(mojangProfile.id);
+
+    // Check if this Minecraft account (by UUID) is already linked to another user
+    // Using UUID is more reliable than username since Minecraft usernames can change
     const existingLink = await prisma.minecraftAccount.findFirst({
       where: {
-        mcUsername: mcUsername,
+        mcUuid: mcUuid,
         userId: { not: session.user.id }
       }
     });

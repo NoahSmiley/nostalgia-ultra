@@ -3,17 +3,17 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { mcControl } from "@/lib/mc-control";
 
-// MiniMessage formatted prefixes for each subscription tier
-// Ultra uses React blue (#61DAFB), Member uses green
+// Minecraft color code prefixes for each subscription tier (Fakename mod uses & codes)
+// Ultra uses aqua (&b), Member uses green (&a)
 const TIER_PREFIXES: Record<string, string> = {
-  ultra: "<color:#61DAFB>[Ultra]</color>",
-  member: "<gradient:#22c55e:#10b981>[Member]</gradient>",
+  ultra: "&b[Ultra]&r",
+  member: "&a[Member]&r",
 };
 
-// Format nickname with tier prefix for in-game display
+// Format nickname with tier prefix for in-game display (using Minecraft & color codes)
 function formatNicknameWithPrefix(nickname: string, tier: string): string {
   const prefix = TIER_PREFIXES[tier] || "";
-  return prefix ? `${prefix} <white>${nickname}</white>` : `<white>${nickname}</white>`;
+  return prefix ? `${prefix} &f${nickname}` : `&f${nickname}`;
 }
 
 // GET - Get current nickname

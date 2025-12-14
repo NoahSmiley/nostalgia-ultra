@@ -154,7 +154,7 @@ export default function StatusPage() {
           {[
             { name: "Game Server", status: isOnline ? "Operational" : "Offline" },
             { name: "Web Dashboard", status: "Operational" },
-            { name: "Live Map (Dynmap)", status: isOnline ? "Operational" : "Offline" },
+            { name: "Voice Chat", status: isOnline ? "Operational" : "Offline" },
             { name: "Automatic Backups", status: "Operational" },
           ].map((service, i) => (
             <div key={i} className="flex items-center justify-between p-5">

@@ -1,23 +1,8 @@
 [
   {
-    "name": "[EMF] Entity Model Features",
-    "side": "client",
-    "modrinthId": "4I1XuqiY"
-  },
-  {
-    "name": "[ETF] Entity Texture Features",
-    "side": "client",
-    "modrinthId": "BVzZfTc1"
-  },
-  {
-    "name": "Accessories",
+    "name": "Amendments",
     "side": "both",
-    "modrinthId": "jtmvUHXj"
-  },
-  {
-    "name": "Analog",
-    "side": "server",
-    "modrinthId": "OpqpD8K2"
+    "modrinthId": "6iTJugQR"
   },
   {
     "name": "AppleSkin",
@@ -25,39 +10,44 @@
     "modrinthId": "EsAfCjCV"
   },
   {
+    "name": "Applied Energistics 2",
+    "side": "both",
+    "modrinthId": "XxWD5pD0"
+  },
+  {
     "name": "Architectury API",
     "side": "both",
     "modrinthId": "lhGA9TYQ"
   },
   {
-    "name": "AttributeFix",
+    "name": "Astikor Carts",
     "side": "both",
-    "modrinthId": "lOOpEntO"
+    "modrinthId": "2MZvbf4F"
   },
   {
-    "name": "BadOptimizations",
-    "side": "client",
-    "modrinthId": "g96Z4WVZ"
-  },
-  {
-    "name": "Biome Replacer",
-    "side": "server",
-    "modrinthId": "DAXbR0Wj"
-  },
-  {
-    "name": "Bookshelf",
+    "name": "Athena",
     "side": "both",
-    "modrinthId": "uy4Cnpcm"
+    "modrinthId": "b1ZV3DIJ"
   },
   {
-    "name": "Camera Overhaul",
-    "side": "client",
-    "modrinthId": "m0oRwcZx"
+    "name": "Balm",
+    "side": "both",
+    "modrinthId": "MBAkmtvl"
   },
   {
-    "name": "Capes",
-    "side": "client",
-    "modrinthId": "89Wsn8GD"
+    "name": "Botania",
+    "side": "both",
+    "modrinthId": "h5W6xrCp"
+  },
+  {
+    "name": "Caelus API",
+    "side": "both",
+    "modrinthId": "4mrLpva5"
+  },
+  {
+    "name": "Canary",
+    "side": "both",
+    "modrinthId": "qa1j1zYR"
   },
   {
     "name": "Carry On",
@@ -65,24 +55,24 @@
     "modrinthId": "joEfVgkn"
   },
   {
-    "name": "Chat Heads",
-    "side": "client",
-    "modrinthId": "Wb5oqrBJ"
+    "name": "CC: Tweaked",
+    "side": "both",
+    "modrinthId": "gu7yAYhd"
+  },
+  {
+    "name": "Chipped",
+    "side": "both",
+    "modrinthId": "BAscRYKm"
+  },
+  {
+    "name": "Chisel",
+    "side": "both",
+    "modrinthId": "G24ewR5j"
   },
   {
     "name": "Chunky",
-    "side": "both",
+    "side": "server",
     "modrinthId": "fALzjamp"
-  },
-  {
-    "name": "CICADA",
-    "side": "both",
-    "modrinthId": "IwCkru1D"
-  },
-  {
-    "name": "CIT Resewn",
-    "side": "client",
-    "modrinthId": "otVJckYQ"
   },
   {
     "name": "Cloth Config API",
@@ -95,34 +85,49 @@
     "modrinthId": "Wnxd13zP"
   },
   {
+    "name": "Cobweb",
+    "side": "both",
+    "modrinthId": "CP36FiJu"
+  },
+  {
     "name": "Collective",
     "side": "both",
     "modrinthId": "e0M1UDsY"
   },
   {
-    "name": "Continents",
-    "side": "both",
-    "modrinthId": "bQ5TJA1E"
-  },
-  {
-    "name": "Continuity",
+    "name": "Controlling",
     "side": "client",
-    "modrinthId": "1IjD5062"
+    "modrinthId": "xv94TkTM"
   },
   {
-    "name": "Cosy Critters & Creepy Crawlies",
-    "side": "client",
-    "modrinthId": "61PI8Hzj"
-  },
-  {
-    "name": "Crawl",
+    "name": "Corpse",
     "side": "both",
-    "modrinthId": "H1JOVjhn"
+    "modrinthId": "RPOSBQgq"
   },
   {
-    "name": "CustomNPCs-Unofficial",
+    "name": "Crawl On Demand",
     "side": "both",
-    "modrinthId": "vFAmwl6B"
+    "modrinthId": "1FrKJRSe"
+  },
+  {
+    "name": "Create",
+    "side": "both",
+    "modrinthId": "LNytGWDc"
+  },
+  {
+    "name": "Create Deco",
+    "side": "both",
+    "modrinthId": "sMvUb30T"
+  },
+  {
+    "name": "Cryonic Config",
+    "side": "both",
+    "modrinthId": "BmvzQMqq"
+  },
+  {
+    "name": "Curios API",
+    "side": "both",
+    "modrinthId": "vvuO3ImH"
   },
   {
     "name": "Diagonal Fences",
@@ -130,24 +135,9 @@
     "modrinthId": "IKARgflD"
   },
   {
-    "name": "Distant Horizons",
-    "side": "both",
-    "modrinthId": "uCdwusMi"
-  },
-  {
     "name": "Do a Barrel Roll",
     "side": "both",
     "modrinthId": "6FtRfnLg"
-  },
-  {
-    "name": "Dynamic Surroundings",
-    "side": "client",
-    "modrinthId": "H7fshfpD"
-  },
-  {
-    "name": "Eating Animation",
-    "side": "client",
-    "modrinthId": "rUgZvGzi"
   },
   {
     "name": "Elytra Slot",
@@ -155,29 +145,29 @@
     "modrinthId": "mSQF1NpT"
   },
   {
-    "name": "Entity Culling",
-    "side": "client",
-    "modrinthId": "NNAgCjsB"
-  },
-  {
-    "name": "Explosive Enhancement",
-    "side": "client",
-    "modrinthId": "OSQ8mw2r"
-  },
-  {
-    "name": "Fabric API",
+    "name": "EMI",
     "side": "both",
-    "modrinthId": "P7dR8mSH"
+    "modrinthId": "fRiHVvU7"
   },
   {
-    "name": "Fabric Language Kotlin",
-    "side": "both",
-    "modrinthId": "Ha28R6CL"
+    "name": "Fakename",
+    "side": "server",
+    "modrinthId": null
   },
   {
-    "name": "FallingTree",
+    "name": "Falling Tree",
     "side": "both",
     "modrinthId": "Fb4jn8m6"
+  },
+  {
+    "name": "Farm & Charm",
+    "side": "both",
+    "modrinthId": "UbpYgpbk"
+  },
+  {
+    "name": "Farmer's Delight",
+    "side": "both",
+    "modrinthId": "R2OftAxM"
   },
   {
     "name": "FerriteCore",
@@ -185,64 +175,34 @@
     "modrinthId": "uXXizFIs"
   },
   {
-    "name": "Fog",
-    "side": "both",
-    "modrinthId": "WuGVWUF2"
-  },
-  {
-    "name": "Forge Config API Port",
-    "side": "both",
-    "modrinthId": "ohNO6lps"
-  },
-  {
-    "name": "Fzzy Config",
-    "side": "both",
-    "modrinthId": "hYykXjDp"
-  },
-  {
-    "name": "Geckolib",
+    "name": "GeckoLib",
     "side": "both",
     "modrinthId": "8BmcQJ2H"
   },
   {
-    "name": "Harvest",
-    "side": "server",
-    "modrinthId": "1DgT4iww"
-  },
-  {
-    "name": "Hunger Tweaks",
+    "name": "GML (Genericmod Loader)",
     "side": "both",
-    "modrinthId": "2ygSk5sW"
+    "modrinthId": null
   },
   {
-    "name": "Immersive Hotbar",
-    "side": "client",
-    "modrinthId": "nxCjKP6D"
+    "name": "GuideME",
+    "side": "both",
+    "modrinthId": "vshJvKcM"
   },
   {
-    "name": "ImproperUI",
-    "side": "client",
-    "modrinthId": "rizRiwPL"
+    "name": "Inventory Sorter",
+    "side": "both",
+    "modrinthId": "Lx6K7A55"
   },
   {
-    "name": "ImmediatelyFast",
-    "side": "client",
-    "modrinthId": "5ZwdcRci"
+    "name": "Iron Chests",
+    "side": "both",
+    "modrinthId": "gqRXDo8B"
   },
   {
-    "name": "Indium",
-    "side": "client",
-    "modrinthId": "Orvt0mRa"
-  },
-  {
-    "name": "Iris Shaders",
-    "side": "client",
-    "modrinthId": "YL57xq9U"
-  },
-  {
-    "name": "ItemSwapper",
-    "side": "client",
-    "modrinthId": "RPOSBQgq"
+    "name": "Jade",
+    "side": "both",
+    "modrinthId": "nvQzSEkH"
   },
   {
     "name": "Just Enough Items (JEI)",
@@ -250,39 +210,49 @@
     "modrinthId": "u6dRKJwZ"
   },
   {
-    "name": "Lithium",
+    "name": "Kotlin for Forge",
     "side": "both",
-    "modrinthId": "gvQqBUqZ"
+    "modrinthId": "ordsPcFz"
   },
   {
-    "name": "Lithostitched",
+    "name": "Lootr",
     "side": "both",
-    "modrinthId": "XaDC71GB"
+    "modrinthId": "EltpO5cN"
   },
   {
-    "name": "M.R.U",
+    "name": "LR Tactical",
     "side": "both",
-    "modrinthId": "SNVQ2c0g"
+    "modrinthId": null
   },
   {
-    "name": "Marium's Soulslike Weaponry",
-    "side": "both",
-    "modrinthId": "oX6SohLj"
+    "name": "LuckPerms",
+    "side": "server",
+    "modrinthId": "Vebnzrzj"
   },
   {
-    "name": "Mine Glass Without Silk Touch",
+    "name": "Macaw's Bridges",
     "side": "both",
-    "modrinthId": "49ume2sb"
+    "modrinthId": "GURcjz8O"
   },
   {
-    "name": "Mod Menu",
+    "name": "Mantle",
+    "side": "both",
+    "modrinthId": "bHTp2wHq"
+  },
+  {
+    "name": "Medieval Weapon Sounds",
     "side": "client",
-    "modrinthId": "mOgUt4GM"
+    "modrinthId": "aAfpQQTI"
   },
   {
-    "name": "Model Gap Fix",
-    "side": "client",
-    "modrinthId": "QdG47OkI"
+    "name": "Mekanism",
+    "side": "both",
+    "modrinthId": "VkxhVVf8"
+  },
+  {
+    "name": "Memory Leak Fix",
+    "side": "both",
+    "modrinthId": "NRjRiSSD"
   },
   {
     "name": "ModernFix",
@@ -295,19 +265,9 @@
     "modrinthId": "twkfQtEc"
   },
   {
-    "name": "More Culling",
-    "side": "client",
-    "modrinthId": "51shyZVL"
-  },
-  {
-    "name": "Mouse Tweaks",
-    "side": "client",
-    "modrinthId": "aC3cM3Vq"
-  },
-  {
     "name": "Moving Elevators",
     "side": "both",
-    "modrinthId": "9KZOe6HD"
+    "modrinthId": "G6xO55He"
   },
   {
     "name": "Nature's Compass",
@@ -315,19 +275,9 @@
     "modrinthId": "fPetb5Kh"
   },
   {
-    "name": "NiftyCarts",
-    "side": "both",
-    "modrinthId": "CXd6g9xp"
-  },
-  {
     "name": "Not Enough Animations",
     "side": "client",
     "modrinthId": "MPCX6s5C"
-  },
-  {
-    "name": "Nvidium",
-    "side": "client",
-    "modrinthId": "SfMw2IZN"
   },
   {
     "name": "Nyf's Spiders",
@@ -335,27 +285,22 @@
     "modrinthId": "dOGM7ccu"
   },
   {
-    "name": "OctoLib",
+    "name": "Particular",
     "side": "both",
-    "modrinthId": "RH2KUdKJ"
+    "modrinthId": "B0qwsWqZ"
   },
   {
-    "name": "oωo (owo-lib)",
+    "name": "Patchouli",
     "side": "both",
-    "modrinthId": "ccKDOlHs"
+    "modrinthId": "nU0bVIaL"
   },
   {
-    "name": "Particle Rain",
-    "side": "client",
-    "modrinthId": "nrikgvxm"
+    "name": "Ping Wheel",
+    "side": "both",
+    "modrinthId": "HpkfkuCJ"
   },
   {
-    "name": "Particular ✨",
-    "side": "client",
-    "modrinthId": "B1CcCd9h"
-  },
-  {
-    "name": "Player Animation Library",
+    "name": "Player Animation Lib",
     "side": "both",
     "modrinthId": "ha1mEyJS"
   },
@@ -365,9 +310,9 @@
     "modrinthId": "tagwiZkJ"
   },
   {
-    "name": "Prickle",
-    "side": "both",
-    "modrinthId": "aaRl8GiW"
+    "name": "Proxy Compatible Forge",
+    "side": "server",
+    "modrinthId": null
   },
   {
     "name": "Puzzles Lib",
@@ -375,19 +320,9 @@
     "modrinthId": "QAGBst4M"
   },
   {
-    "name": "Raised",
-    "side": "client",
-    "modrinthId": "nCQRBEiR"
-  },
-  {
-    "name": "Ranged Weapon API",
+    "name": "Quark",
     "side": "both",
-    "modrinthId": "AqaIIO6D"
-  },
-  {
-    "name": "re:squake",
-    "side": "client",
-    "modrinthId": "a9PBgIsO"
+    "modrinthId": "qOi4MGKJ"
   },
   {
     "name": "Realistic Bees",
@@ -395,14 +330,14 @@
     "modrinthId": "tG6HkcWx"
   },
   {
-    "name": "Resourcify",
-    "side": "client",
-    "modrinthId": "RLzHAoZe"
+    "name": "Resourceful Lib",
+    "side": "both",
+    "modrinthId": "G1hIVGNp"
   },
   {
-    "name": "Shoulder Surfing Reloaded",
+    "name": "Searchables",
     "side": "client",
-    "modrinthId": "kepjj2sy"
+    "modrinthId": "fuuu3xnx"
   },
   {
     "name": "Shulker Box Tooltip",
@@ -415,39 +350,39 @@
     "modrinthId": "9eGKb6K1"
   },
   {
-    "name": "Smooth Scrolling",
-    "side": "client",
-    "modrinthId": "ooLePm2K"
-  },
-  {
-    "name": "Sodium",
-    "side": "client",
-    "modrinthId": "AANobbMI"
-  },
-  {
-    "name": "Sodium Dynamic Lights",
-    "side": "client",
-    "modrinthId": "PxQSWIcD"
-  },
-  {
-    "name": "Sound Physics Remastered",
+    "name": "Sophisticated Backpacks",
     "side": "both",
-    "modrinthId": "qyVF9oeo"
+    "modrinthId": "TDqCY8hB"
   },
   {
-    "name": "Sounds",
-    "side": "client",
-    "modrinthId": "ZouiUX7t"
-  },
-  {
-    "name": "Subtle Effects",
+    "name": "Sophisticated Core",
     "side": "both",
-    "modrinthId": "4q8UOK1d"
+    "modrinthId": "KDdhVRTS"
+  },
+  {
+    "name": "Spark",
+    "side": "server",
+    "modrinthId": "l6YH9Als"
+  },
+  {
+    "name": "Squake Reforged",
+    "side": "both",
+    "modrinthId": null
+  },
+  {
+    "name": "Stack Refill",
+    "side": "both",
+    "modrinthId": "ZCkgbqiQ"
+  },
+  {
+    "name": "Steam 'n Rails",
+    "side": "both",
+    "modrinthId": "ZzjhlDgM"
   },
   {
     "name": "SuperMartijn642's Config Lib",
     "side": "both",
-    "modrinthId": "LN9BxssP"
+    "modrinthId": "LN9BxssU"
   },
   {
     "name": "SuperMartijn642's Core Lib",
@@ -455,58 +390,43 @@
     "modrinthId": "rOUBggPv"
   },
   {
+    "name": "Supplementaries",
+    "side": "both",
+    "modrinthId": "tQxLISYF"
+  },
+  {
+    "name": "TACZ (Timeless and Classics Zero)",
+    "side": "both",
+    "modrinthId": "H6yVQxHo"
+  },
+  {
     "name": "Tectonic",
     "side": "both",
     "modrinthId": "lWDHr9jE"
   },
   {
-    "name": "Tiny Item Animations",
-    "side": "client",
-    "modrinthId": "wMkevcSR"
-  },
-  {
-    "name": "Text Placeholder API",
+    "name": "Tinkers' Construct",
     "side": "both",
-    "modrinthId": "eXts2L7r"
+    "modrinthId": "CtkIB0la"
   },
   {
-    "name": "Toni's Immersive Lanterns",
+    "name": "Traveler's Backpack",
     "side": "both",
-    "modrinthId": "vskzdsyT"
+    "modrinthId": "rlloIFEV"
   },
   {
-    "name": "Trinkets",
+    "name": "Waystones",
     "side": "both",
-    "modrinthId": "5aaWibi9"
-  },
-  {
-    "name": "TxniLib",
-    "side": "both",
-    "modrinthId": "vBbPDuOs"
-  },
-  {
-    "name": "Wakes",
-    "side": "client",
-    "modrinthId": "dlNu0RQY"
-  },
-  {
-    "name": "Wavey Capes",
-    "side": "client",
-    "modrinthId": "kYuIpRLv"
-  },
-  {
-    "name": "Xaero's Minimap",
-    "side": "both",
-    "modrinthId": "1bokaNcj"
-  },
-  {
-    "name": "Xaero's World Map",
-    "side": "both",
-    "modrinthId": "NcUtCpym"
+    "modrinthId": "LOpKHB2A"
   },
   {
     "name": "YetAnotherConfigLib (YACL)",
     "side": "both",
     "modrinthId": "1eAoo2KR"
+  },
+  {
+    "name": "Zeta",
+    "side": "both",
+    "modrinthId": "6vDuLKPM"
   }
 ]

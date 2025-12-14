@@ -50,13 +50,14 @@ export class RconClient {
     }
   }
 
-  // Styled-nicknames commands
+  // Endless Nicknames mod commands (Forge 1.20.1)
+  // Uses /nickname set <player> <name> - supports color codes with &
   async setNickname(username: string, nickname: string): Promise<string> {
-    return this.sendCommand(`styled-nicknames set ${username} ${nickname}`);
+    return this.sendCommand(`nickname set ${username} ${nickname}`);
   }
 
   async clearNickname(username: string): Promise<string> {
-    return this.sendCommand(`styled-nicknames clear ${username}`);
+    return this.sendCommand(`nickname clear ${username}`);
   }
 }
 
@@ -92,17 +93,17 @@ export async function sendToAllServers(
   return results;
 }
 
-// Helper to set nickname on all servers
+// Helper to set nickname on all servers (using Endless Nicknames mod)
 export async function setNicknameOnAllServers(
   username: string,
   nickname: string
 ): Promise<Record<string, { success: boolean; response?: string; error?: string }>> {
-  return sendToAllServers(`styled-nicknames set ${username} ${nickname}`);
+  return sendToAllServers(`nickname set ${username} ${nickname}`);
 }
 
-// Helper to clear nickname on all servers
+// Helper to clear nickname on all servers (using Endless Nicknames mod)
 export async function clearNicknameOnAllServers(
   username: string
 ): Promise<Record<string, { success: boolean; response?: string; error?: string }>> {
-  return sendToAllServers(`styled-nicknames clear ${username}`);
+  return sendToAllServers(`nickname clear ${username}`);
 }
