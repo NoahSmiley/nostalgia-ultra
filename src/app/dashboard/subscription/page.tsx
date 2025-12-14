@@ -693,7 +693,8 @@ function SubscriptionContent() {
             <ul className="space-y-3">
               {[
                 "Everything in Standard",
-                "Ultra modpack with shaders & enhancements",
+                "CS2 knives - spawn with your favorite knife",
+                "Custom in-game nickname",
                 "Ultra role & exclusive perks",
                 "Vote on server decisions",
                 "Early access to new features",

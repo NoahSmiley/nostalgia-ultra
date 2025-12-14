@@ -34,6 +34,7 @@ const mainNavItems = [
 const accountNavItems = [
   { title: "Link Account", href: "/dashboard/minecraft" },
   { title: "Subscription", href: "/dashboard/subscription" },
+  { title: "Perks", href: "/dashboard/perks" },
 ];
 
 // Server info items

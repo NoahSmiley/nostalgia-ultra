@@ -44,13 +44,14 @@ model InviteCode {
 }
 
 model MinecraftAccount {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String   @unique
-  mcUuid     String   @unique
-  mcUsername String
-  nickname   String?  // Custom nickname for Ultra members
-  linkedAt   DateTime @default(now())
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String   @unique
+  mcUuid        String   @unique
+  mcUsername    String
+  nickname      String?  // Custom nickname for Ultra members
+  selectedKnife String?  // CS2 knife selection for Ultra members (e.g., "karambit", "butterfly", "bayonet")
+  linkedAt      DateTime @default(now())
 }
 
 model Subscription {

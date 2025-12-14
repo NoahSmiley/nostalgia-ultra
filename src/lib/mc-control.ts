@@ -193,6 +193,17 @@ export class McControlClient {
   async broadcastFormattedAnnouncement(message: string): Promise<{ success: boolean; response: string }> {
     return this.executeCommand(`broadcast ${message}`);
   }
+
+  // Give item to player via /give command
+  async giveItem(username: string, itemId: string, count: number = 1): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.executeOnAllBackends(`give ${username} ${itemId} ${count}`);
+  }
+
+  // Give CS2 knife to Ultra member
+  // Uses TaCZ item IDs (e.g., "tacz:cs2_butterfly_knife")
+  async giveKnife(username: string, knifeItemId: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
+    return this.giveItem(username, knifeItemId, 1);
+  }
 }
 
 export interface ServerStatus {
