@@ -78,9 +78,4 @@ export const WORLDS = {
     description: 'A creative world for building without limits. Design and share your creations.',
     status: 'coming_soon' as const,
   },
-  crucible: {
-    name: 'The Crucible',
-    description: 'Test your skills in competitive PvP battles and events.',
-    status: 'coming_soon' as const,
-  },
 } as const;
