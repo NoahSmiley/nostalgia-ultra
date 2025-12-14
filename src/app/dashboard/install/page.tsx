@@ -200,11 +200,11 @@ export default function InstallGuidePage() {
               <div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">2</span>
-                  <h3 className="text-lg font-semibold text-foreground">Create a Fabric Instance</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Create a Forge Instance</h3>
                 </div>
                 <div className="text-muted-foreground mb-4 ml-14">
                   <p className="mb-2">Open Prism and click <strong className="text-foreground">"Add Instance"</strong>.</p>
-                  <p>Select <strong className="text-foreground">Minecraft {SERVER_CONFIG.mcVersion}</strong> and install <strong className="text-foreground">Fabric Loader</strong>.</p>
+                  <p>Select <strong className="text-foreground">Minecraft {SERVER_CONFIG.mcVersion}</strong> and install <strong className="text-foreground">Forge {SERVER_CONFIG.forgeVersion}</strong>.</p>
                 </div>
               </div>
 
@@ -299,7 +299,7 @@ export default function InstallGuidePage() {
                 <h3 className="font-semibold text-foreground mb-3">Requirements</h3>
                 <ul className="text-muted-foreground space-y-2 list-disc list-inside">
                   <li>Minecraft {SERVER_CONFIG.mcVersion}</li>
-                  <li>Fabric Loader {SERVER_CONFIG.fabricVersion} or later</li>
+                  <li>Forge {SERVER_CONFIG.forgeVersion} or later</li>
                   <li>{SYSTEM_REQUIREMENTS.java.display}</li>
                 </ul>
               </div>
@@ -307,17 +307,17 @@ export default function InstallGuidePage() {
               <div>
                 <h3 className="font-semibold text-foreground mb-3">Steps</h3>
                 <ol className="text-muted-foreground space-y-2 list-decimal list-inside">
-                  <li>Download and install the Fabric loader</li>
+                  <li>Download and install the Forge loader</li>
                   <li>Download all required mods from our mod list</li>
                   <li>Place all mods in your <code className="bg-muted px-2 py-1 rounded text-foreground">.minecraft/mods</code> folder</li>
-                  <li>Launch Minecraft with the Fabric profile and connect to the server</li>
+                  <li>Launch Minecraft with the Forge profile and connect to the server</li>
                 </ol>
               </div>
 
               <Button variant="outline" asChild>
-                <a href={LINKS.fabricInstaller} target="_blank" rel="noopener noreferrer">
+                <a href={LINKS.forgeInstaller} target="_blank" rel="noopener noreferrer">
                   <Download className="mr-2 h-4 w-4" />
-                  Download Fabric Installer
+                  Download Forge Installer
                 </a>
               </Button>
             </div>

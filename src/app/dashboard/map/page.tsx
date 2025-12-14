@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ExternalLink, Map, Globe, Users, Layers, Compass, Swords, Home } from "lucide-react";
+import { ExternalLink, Map, Globe, Users, Layers, Compass, Home } from "lucide-react";
 
 const SERVERS = [
   {
@@ -23,15 +23,6 @@ const SERVERS = [
     icon: Home,
     color: "text-blue-400",
     bgColor: "bg-blue-400/10",
-  },
-  {
-    id: "crucible",
-    name: "Crucible",
-    description: "PvP arena - battlegrounds and competitive zones",
-    url: "http://n1429.pufferfish.host:25532",
-    icon: Swords,
-    color: "text-red-400",
-    bgColor: "bg-red-400/10",
   },
 ];
 

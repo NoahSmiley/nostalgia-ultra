@@ -21,11 +21,6 @@ const serverConfigs: Record<string, RconConfig> = {
     port: parseInt(process.env.SPAWN_RCON_PORT || '25576'),
     password: process.env.SPAWN_RCON_PASSWORD || '',
   },
-  crucible: {
-    host: RCON_HOST,
-    port: parseInt(process.env.CRUCIBLE_RCON_PORT || '25577'),
-    password: process.env.CRUCIBLE_RCON_PASSWORD || '',
-  },
 };
 
 export class RconClient {
@@ -68,7 +63,6 @@ export class RconClient {
 // Individual server clients
 export const frontierRcon = new RconClient('frontier');
 export const spawnRcon = new RconClient('spawn');
-export const crucibleRcon = new RconClient('crucible');
 
 // Helper to send a command to all servers
 export async function sendToAllServers(
@@ -79,7 +73,6 @@ export async function sendToAllServers(
   const servers = [
     { name: 'frontier', client: frontierRcon },
     { name: 'spawn', client: spawnRcon },
-    { name: 'crucible', client: crucibleRcon },
   ];
 
   await Promise.all(

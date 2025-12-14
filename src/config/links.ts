@@ -10,10 +10,10 @@ export const LINKS = {
   // Launcher Downloads
   prismLauncher: 'https://prismlauncher.org/download',
   atLauncher: 'https://atlauncher.com/downloads',
-  fabricInstaller: 'https://fabricmc.net/use/installer/',
+  forgeInstaller: 'https://files.minecraftforge.net/net/minecraftforge/forge/',
 
   // Documentation & Help
-  fabricWiki: 'https://fabricmc.net/wiki/',
+  forgeWiki: 'https://docs.minecraftforge.net/',
   minecraftWiki: 'https://minecraft.wiki/',
 } as const;
 
