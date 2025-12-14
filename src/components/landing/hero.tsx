@@ -29,7 +29,7 @@ export function LandingHero() {
               alt="Minecraft"
               className="w-48 h-48 object-contain"
             />
-            <h1 id="hero-heading" className="font-[family-name:var(--font-minecraft)] text-5xl md:text-6xl text-white">
+            <h1 id="hero-heading" className="text-5xl md:text-6xl font-semibold text-white">
               Endless
             </h1>
           </div>

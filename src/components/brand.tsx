@@ -4,7 +4,7 @@ interface BrandProps {
 
 export function Brand({ className = "" }: BrandProps) {
   return (
-    <span className={`font-[family-name:var(--font-minecraft)] ${className}`}>
+    <span className={`font-semibold ${className}`}>
       Endless
     </span>
   );

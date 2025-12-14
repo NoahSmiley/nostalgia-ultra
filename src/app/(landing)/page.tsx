@@ -66,7 +66,7 @@ export default function LandingPage() {
         </div>
         <h1 className="text-h1 mb-8">
           <span className="text-[0.7em]">Your adventure awaits on</span><br />
-          <span className="font-[family-name:var(--font-minecraft)]">Endless</span>
+          <span className="font-semibold">Endless</span>
         </h1>
         <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
           A private, invite-only Minecraft server for friends. No lost worlds, no setup hassle,
