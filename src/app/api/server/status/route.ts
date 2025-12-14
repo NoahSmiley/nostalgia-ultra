@@ -57,7 +57,7 @@ export async function GET() {
         config: {
           ip: SERVER_CONFIG.ip,
           mcVersion: SERVER_CONFIG.mcVersion,
-          fabricVersion: SERVER_CONFIG.fabricVersion,
+          forgeVersion: SERVER_CONFIG.forgeVersion,
           maxPlayers: SERVER_CONFIG.maxPlayers,
           restartTime: SERVER_CONFIG.fullRestartTime,
         },
@@ -77,7 +77,7 @@ export async function GET() {
       config: {
         ip: SERVER_CONFIG.ip,
         mcVersion: SERVER_CONFIG.mcVersion,
-        fabricVersion: SERVER_CONFIG.fabricVersion,
+        forgeVersion: SERVER_CONFIG.forgeVersion,
         maxPlayers: SERVER_CONFIG.maxPlayers,
         restartTime: SERVER_CONFIG.fullRestartTime,
       },
@@ -96,7 +96,7 @@ export async function GET() {
       config: {
         ip: SERVER_CONFIG.ip,
         mcVersion: SERVER_CONFIG.mcVersion,
-        fabricVersion: SERVER_CONFIG.fabricVersion,
+        forgeVersion: SERVER_CONFIG.forgeVersion,
         maxPlayers: SERVER_CONFIG.maxPlayers,
         restartTime: SERVER_CONFIG.fullRestartTime,
       },
