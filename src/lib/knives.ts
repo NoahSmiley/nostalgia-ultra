@@ -9,67 +9,67 @@ export interface KnifeConfig {
 }
 
 // Available CS2 knives from the CS2 Knifes Pack v1.0.1
-// Item IDs use lrtactical:melee with NBT tag for the specific knife
+// Item IDs use lrtactical:melee with MeleeWeaponId NBT tag
 export const AVAILABLE_KNIVES: KnifeConfig[] = [
   {
     id: 'butterfly',
     name: 'Butterfly Knife',
     description: 'A classic CS2 butterfly knife with smooth flipping animations',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:butterfly"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:butterfly"}',
   },
   {
     id: 'karambit',
     name: 'Karambit',
     description: 'Curved blade karambit with signature spinning inspect',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:karambit"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:karambit"}',
   },
   {
     id: 'push',
     name: 'Shadow Daggers',
     description: 'Dual shadow daggers for quick strikes',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:push"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:push"}',
   },
   {
     id: 'bayonet',
     name: 'Bayonet',
     description: 'Military-style bayonet with tactical edge',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:bayonet"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:bayonet"}',
   },
   {
     id: 'm9',
     name: 'M9 Bayonet',
     description: 'The iconic M9 bayonet with sleek design',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:m9"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:m9"}',
   },
   {
     id: 'skeleton',
     name: 'Skeleton Knife',
     description: 'Lightweight skeleton knife with unique grip',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:skeleton"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:skeleton"}',
   },
   {
     id: 'tactical',
     name: 'Huntsman Knife',
     description: 'Tactical huntsman knife for outdoor survival',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:tactical"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:tactical"}',
   },
   {
     id: 'css',
     name: 'Classic Knife',
     description: 'The classic CS:S knife design',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:css"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:css"}',
   },
   {
     id: 'stiletto',
     name: 'Stiletto Knife',
     description: 'Slim stiletto blade with elegant design',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:stiletto"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:stiletto"}',
   },
   {
     id: 'talon',
     name: 'Talon Knife',
     description: 'Serrated talon blade with aggressive styling',
-    itemId: 'lrtactical:melee{Melee:"cs2_wt:talon"}',
+    itemId: 'lrtactical:melee{MeleeWeaponId:"cs2_wt:talon"}',
   },
 ];
 
