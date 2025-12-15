@@ -199,10 +199,11 @@ export class McControlClient {
     return this.executeOnAllBackends(`give ${username} ${itemId} ${count}`);
   }
 
-  // Give CS2 knife to Ultra member
-  // Uses TaCZ item IDs (e.g., "tacz:cs2_butterfly_knife")
+  // Give CS2 knife to Ultra member in first hotbar slot
+  // Uses /item command to place directly in hotbar slot 0
   async giveKnife(username: string, knifeItemId: string): Promise<{ success: boolean; results?: Record<string, { success: boolean; response: string }>; error?: string }> {
-    return this.giveItem(username, knifeItemId, 1);
+    // Use /item replace to put the knife in hotbar slot 0 (first slot)
+    return this.executeOnAllBackends(`item replace entity ${username} hotbar.0 with ${knifeItemId} 1`);
   }
 }
 
