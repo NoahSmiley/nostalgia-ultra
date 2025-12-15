@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Check, AlertCircle, Loader2, Sword, Lock, Crown } from "lucide-react";
+import { Check, AlertCircle, Loader2, Lock, Crown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 interface KnifeConfig {
   id: string;
@@ -118,7 +119,7 @@ export default function PerksPage() {
       <div className="w-full">
         <div className="mb-16">
           <p className="text-sm font-medium text-primary mb-4">Ultra Perks</p>
-          <h1 className="text-h1 text-foreground mb-6">CS2 Knives</h1>
+          <h1 className="text-h1 text-foreground mb-6">CS2 Knife Shop</h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
             Choose your CS2 knife to spawn with on the server.
           </p>
@@ -150,7 +151,7 @@ export default function PerksPage() {
       <div className="w-full">
         <div className="mb-16">
           <p className="text-sm font-medium text-primary mb-4">Ultra Perks</p>
-          <h1 className="text-h1 text-foreground mb-6">CS2 Knives</h1>
+          <h1 className="text-h1 text-foreground mb-6">CS2 Knife Shop</h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
             Choose your CS2 knife to spawn with on the server.
           </p>
@@ -187,24 +188,31 @@ export default function PerksPage() {
           <p className="text-muted-foreground mb-8">
             Here&apos;s a preview of the knives available with Ultra membership
           </p>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {data?.availableKnives.map((knife) => (
               <div
                 key={knife.id}
-                className="rounded-xl border border-border bg-card/50 p-5 opacity-60"
+                className="group relative rounded-xl border border-border bg-card/50 overflow-hidden opacity-60"
               >
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                    <Lock className="h-5 w-5 text-muted-foreground" />
+                <div className="aspect-square relative bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center p-4">
+                  <Image
+                    src={`/images/knives/${knife.id}.png`}
+                    alt={knife.name}
+                    width={128}
+                    height={128}
+                    className="object-contain drop-shadow-lg grayscale"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <Lock className="h-8 w-8 text-white/60" />
                   </div>
-                  <div>
-                    <h3 className="font-medium text-foreground mb-1">
-                      {knife.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {knife.description}
-                    </p>
-                  </div>
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-foreground text-sm truncate">
+                    {knife.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {knife.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -215,12 +223,16 @@ export default function PerksPage() {
   }
 
   // Ultra member view - can select knives
+  const selectedKnifeData = data?.availableKnives.find(
+    (k) => k.id === data.selectedKnife
+  );
+
   return (
     <div className="w-full">
       {/* Hero */}
-      <div className="mb-16">
+      <div className="mb-12">
         <p className="text-sm font-medium text-primary mb-4">Ultra Perks</p>
-        <h1 className="text-h1 text-foreground mb-6">CS2 Knives</h1>
+        <h1 className="text-h1 text-foreground mb-6">CS2 Knife Shop</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
           Choose your CS2 knife to spawn with on the server. Your knife will be
           given to you automatically when you join.
@@ -242,49 +254,56 @@ export default function PerksPage() {
         </div>
       )}
 
-      {/* Current Selection */}
-      {data?.selectedKnife && (
-        <div className="mb-8">
-          <div className="rounded-2xl border border-primary/30 bg-card p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20">
-                  <Sword className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Current Knife</p>
-                  <p className="text-lg font-medium text-foreground">
-                    {data.availableKnives.find((k) => k.id === data.selectedKnife)
-                      ?.name || data.selectedKnife}
-                  </p>
-                </div>
+      {/* Current Selection Banner */}
+      {selectedKnifeData && (
+        <div className="mb-10 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative w-24 h-24 flex-shrink-0">
+              <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl" />
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Image
+                  src={`/images/knives/${selectedKnifeData.id}.png`}
+                  alt={selectedKnifeData.name}
+                  width={96}
+                  height={96}
+                  className="object-contain drop-shadow-[0_0_15px_rgba(97,218,251,0.5)]"
+                />
               </div>
-              <Button
-                variant="outline"
-                onClick={handleClearKnife}
-                disabled={saving === "clear"}
-              >
-                {saving === "clear" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Clear Selection"
-                )}
-              </Button>
             </div>
+            <div className="flex-1 text-center sm:text-left">
+              <p className="text-sm text-primary font-medium mb-1">Currently Equipped</p>
+              <h2 className="text-2xl font-bold text-foreground mb-1">
+                {selectedKnifeData.name}
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                {selectedKnifeData.description}
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={handleClearKnife}
+              disabled={saving === "clear"}
+              className="shrink-0"
+            >
+              {saving === "clear" ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
+              Unequip
+            </Button>
           </div>
         </div>
       )}
 
       {/* Knife Grid */}
       <div>
-        <h2 className="text-2xl font-semibold text-foreground mb-3">
+        <h2 className="text-2xl font-semibold text-foreground mb-2">
           {data?.selectedKnife ? "Change Knife" : "Select Your Knife"}
         </h2>
-        <p className="text-muted-foreground mb-8">
-          Click on a knife to select it as your spawn weapon
+        <p className="text-muted-foreground mb-6">
+          Click on a knife to equip it as your spawn weapon
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {data?.availableKnives.map((knife) => {
             const isSelected = data.selectedKnife === knife.id;
             const isSaving = saving === knife.id;
@@ -294,42 +313,55 @@ export default function PerksPage() {
                 key={knife.id}
                 onClick={() => handleSelectKnife(knife.id)}
                 disabled={!!saving || isSelected}
-                className={`rounded-xl border p-5 text-left transition-all ${
+                className={`group relative rounded-xl border overflow-hidden text-left transition-all duration-200 ${
                   isSelected
-                    ? "border-primary bg-primary/10"
-                    : "border-border bg-card hover:border-primary/50 hover:bg-card/80"
+                    ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                    : "border-border bg-card hover:border-primary/50 hover:bg-card/80 hover:scale-[1.02]"
                 } ${saving && !isSaving ? "opacity-50" : ""}`}
               >
-                <div className="flex items-start gap-3">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                      isSelected ? "bg-primary/20" : "bg-muted"
+                {/* Image Container */}
+                <div className={`aspect-square relative flex items-center justify-center p-4 ${
+                  isSelected
+                    ? "bg-gradient-to-br from-primary/20 to-primary/5"
+                    : "bg-gradient-to-br from-muted/50 to-muted group-hover:from-primary/10 group-hover:to-muted/50"
+                }`}>
+                  <Image
+                    src={`/images/knives/${knife.id}.png`}
+                    alt={knife.name}
+                    width={128}
+                    height={128}
+                    className={`object-contain transition-all duration-200 ${
+                      isSelected
+                        ? "drop-shadow-[0_0_12px_rgba(97,218,251,0.4)] scale-105"
+                        : "drop-shadow-lg group-hover:scale-110"
                     }`}
-                  >
-                    {isSaving ? (
-                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                    ) : isSelected ? (
-                      <Check className="h-5 w-5 text-primary" />
-                    ) : (
-                      <Sword
-                        className={`h-5 w-5 ${
-                          isSelected ? "text-primary" : "text-muted-foreground"
-                        }`}
-                      />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h3
-                      className={`font-medium mb-1 ${
-                        isSelected ? "text-primary" : "text-foreground"
-                      }`}
-                    >
-                      {knife.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {knife.description}
-                    </p>
-                  </div>
+                  />
+
+                  {/* Loading Overlay */}
+                  {isSaving && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  )}
+
+                  {/* Selected Checkmark */}
+                  {isSelected && !isSaving && (
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                      <Check className="h-4 w-4 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="p-3 border-t border-border/50">
+                  <h3 className={`font-medium text-sm truncate ${
+                    isSelected ? "text-primary" : "text-foreground"
+                  }`}>
+                    {knife.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground truncate mt-0.5">
+                    {knife.description}
+                  </p>
                 </div>
               </button>
             );
@@ -341,11 +373,15 @@ export default function PerksPage() {
 
       {/* Info */}
       <div className="rounded-xl border border-border bg-card/50 p-6">
-        <h3 className="font-medium text-foreground mb-2">How it works</h3>
+        <h3 className="font-medium text-foreground mb-3">How it works</h3>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             Your selected knife will be given to you when you join the server
+          </li>
+          <li className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+            The knife appears in your first hotbar slot
           </li>
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
@@ -354,10 +390,6 @@ export default function PerksPage() {
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             Change your knife anytime from this page
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-            Knives are from the TaCZ CS2 Knifes pack
           </li>
         </ul>
       </div>
@@ -368,7 +400,7 @@ export default function PerksPage() {
 function PerksSkeleton() {
   return (
     <div className="w-full">
-      <div className="mb-16">
+      <div className="mb-12">
         <Skeleton className="h-5 w-24 mb-4" />
         <Skeleton className="h-12 w-48 mb-6" />
         <Skeleton className="h-6 w-96 max-w-full" />
@@ -376,18 +408,16 @@ function PerksSkeleton() {
 
       <div className="mb-8">
         <Skeleton className="h-8 w-40 mb-3" />
-        <Skeleton className="h-5 w-64 mb-8" />
+        <Skeleton className="h-5 w-64 mb-6" />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-start gap-3">
-              <Skeleton className="h-10 w-10 rounded-lg" />
-              <div className="flex-1">
-                <Skeleton className="h-5 w-32 mb-2" />
-                <Skeleton className="h-4 w-full" />
-              </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+          <div key={i} className="rounded-xl border border-border bg-card overflow-hidden">
+            <Skeleton className="aspect-square w-full" />
+            <div className="p-3">
+              <Skeleton className="h-4 w-24 mb-2" />
+              <Skeleton className="h-3 w-full" />
             </div>
           </div>
         ))}
