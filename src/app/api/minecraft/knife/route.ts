@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { AVAILABLE_KNIVES, isValidKnifeId, getKnifeById } from "@/lib/knives";
+import { mcControl } from "@/lib/mc-control";
 
 // GET - Get current knife selection and available knives
 export async function GET() {
@@ -93,14 +94,33 @@ export async function POST(request: Request) {
       data: { selectedKnife: knifeId },
     });
 
-    // Note: The knife will be given to the player when they join the server
-    // This is handled by server-side logic that checks the player's selectedKnife
+    // Check if player is currently online and give knife immediately
+    let givenImmediately = false;
+    const mcUsername = user.minecraftLink.mcUsername;
+
+    try {
+      const onlineResponse = await mcControl.getOnlinePlayers();
+      const isOnline = onlineResponse.players.some(
+        p => p.username.toLowerCase() === mcUsername.toLowerCase()
+      );
+
+      if (isOnline && knife) {
+        await mcControl.giveKnife(mcUsername, knife.itemId);
+        givenImmediately = true;
+      }
+    } catch (error) {
+      console.error("Failed to check online status or give knife:", error);
+      // Continue anyway - they'll get it on next join
+    }
 
     return NextResponse.json({
       success: true,
       selectedKnife: knifeId,
       knifeName: knife?.name,
-      message: "Knife selection saved! You'll receive it when you join the server.",
+      message: givenImmediately
+        ? `${knife?.name} given! Check your inventory.`
+        : "Knife selection saved! You'll receive it when you join the server.",
+      givenImmediately,
     });
   } catch (error) {
     console.error("Failed to set knife selection:", error);
