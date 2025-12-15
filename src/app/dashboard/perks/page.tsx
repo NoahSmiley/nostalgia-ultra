@@ -14,6 +14,7 @@ interface KnifeConfig {
   name: string;
   description: string;
   itemId: string;
+  category?: string;
 }
 
 interface KnifeData {
@@ -22,6 +23,15 @@ interface KnifeData {
   hasUltra: boolean;
 }
 
+const CATEGORY_INFO: Record<string, { label: string; color: string; bgColor: string }> = {
+  all: { label: "All Knives", color: "text-white", bgColor: "bg-white/10" },
+  standard: { label: "Standard", color: "text-gray-300", bgColor: "bg-gray-500/20" },
+  fade: { label: "Fade", color: "text-purple-300", bgColor: "bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-yellow-500/30" },
+  doppler: { label: "Doppler", color: "text-pink-300", bgColor: "bg-gradient-to-r from-pink-500/30 to-purple-500/30" },
+  tiger: { label: "Tiger Tooth", color: "text-yellow-300", bgColor: "bg-yellow-500/20" },
+  crimson: { label: "Crimson Web", color: "text-red-300", bgColor: "bg-red-500/20" },
+};
+
 export default function PerksPage() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
@@ -29,6 +39,7 @@ export default function PerksPage() {
   const [data, setData] = useState<KnifeData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
     fetchKnifeData();
@@ -108,6 +119,14 @@ export default function PerksPage() {
       setSaving(null);
     }
   };
+
+  // Filter knives by category
+  const filteredKnives = data?.availableKnives.filter(
+    (knife) => selectedCategory === "all" || knife.category === selectedCategory
+  ) || [];
+
+  // Get unique categories from available knives
+  const availableCategories: string[] = ["all", ...new Set(data?.availableKnives.map((k) => k.category).filter((c): c is string => Boolean(c)) || [])];
 
   if (loading) {
     return <PerksSkeleton />;
@@ -189,7 +208,7 @@ export default function PerksPage() {
             Here&apos;s a preview of the knives available with Ultra membership
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {data?.availableKnives.map((knife) => (
+            {data?.availableKnives.slice(0, 10).map((knife) => (
               <div
                 key={knife.id}
                 className="group relative rounded-xl border border-border bg-card/50 overflow-hidden opacity-60"
@@ -230,7 +249,7 @@ export default function PerksPage() {
   return (
     <div className="w-full">
       {/* Hero */}
-      <div className="mb-12">
+      <div className="mb-8">
         <p className="text-sm font-medium text-primary mb-4">Ultra Perks</p>
         <h1 className="text-h1 text-foreground mb-6">CS2 Knife Shop</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
@@ -241,14 +260,14 @@ export default function PerksPage() {
 
       {/* Alerts */}
       {success && (
-        <div className="mb-8 p-5 rounded-xl border border-green-500/20 bg-green-500/10 flex gap-3">
+        <div className="mb-6 p-5 rounded-xl border border-green-500/20 bg-green-500/10 flex gap-3">
           <Check className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
           <p className="text-green-200">{success}</p>
         </div>
       )}
 
       {error && (
-        <div className="mb-8 p-5 rounded-xl border border-red-500/20 bg-red-500/10 flex gap-3">
+        <div className="mb-6 p-5 rounded-xl border border-red-500/20 bg-red-500/10 flex gap-3">
           <AlertCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
           <p className="text-red-200">{error}</p>
         </div>
@@ -256,7 +275,7 @@ export default function PerksPage() {
 
       {/* Current Selection Banner */}
       {selectedKnifeData && (
-        <div className="mb-10 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+        <div className="mb-8 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <div className="relative w-24 h-24 flex-shrink-0">
               <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl" />
@@ -294,19 +313,45 @@ export default function PerksPage() {
         </div>
       )}
 
+      {/* Category Filter */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {availableCategories.map((category) => {
+            const info = CATEGORY_INFO[category] || CATEGORY_INFO.standard;
+            const isActive = selectedCategory === category;
+            return (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isActive
+                    ? `${info.bgColor} ${info.color} ring-2 ring-white/20`
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                {info.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Knife Grid */}
       <div>
-        <h2 className="text-2xl font-semibold text-foreground mb-2">
-          {data?.selectedKnife ? "Change Knife" : "Select Your Knife"}
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          Click on a knife to equip it as your spawn weapon
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-foreground">
+            {data?.selectedKnife ? "Change Knife" : "Select Your Knife"}
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            {filteredKnives.length} knives
+          </span>
+        </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {data?.availableKnives.map((knife) => {
+          {filteredKnives.map((knife) => {
             const isSelected = data.selectedKnife === knife.id;
             const isSaving = saving === knife.id;
+            const categoryInfo = CATEGORY_INFO[knife.category || "standard"];
 
             return (
               <button
@@ -319,6 +364,13 @@ export default function PerksPage() {
                     : "border-border bg-card hover:border-primary/50 hover:bg-card/80 hover:scale-[1.02]"
                 } ${saving && !isSaving ? "opacity-50" : ""}`}
               >
+                {/* Category Badge */}
+                {knife.category && knife.category !== "standard" && (
+                  <div className={`absolute top-2 left-2 z-10 px-2 py-0.5 rounded text-[10px] font-medium ${categoryInfo.bgColor} ${categoryInfo.color}`}>
+                    {categoryInfo.label}
+                  </div>
+                )}
+
                 {/* Image Container */}
                 <div className={`aspect-square relative flex items-center justify-center p-4 ${
                   isSelected
@@ -406,9 +458,14 @@ function PerksSkeleton() {
         <Skeleton className="h-6 w-96 max-w-full" />
       </div>
 
+      <div className="flex gap-2 mb-6">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Skeleton key={i} className="h-10 w-24 rounded-lg" />
+        ))}
+      </div>
+
       <div className="mb-8">
         <Skeleton className="h-8 w-40 mb-3" />
-        <Skeleton className="h-5 w-64 mb-6" />
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
